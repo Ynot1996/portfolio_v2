@@ -1,127 +1,115 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { FiBriefcase, FiBookOpen, FiZap } from "react-icons/fi";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { FiBriefcase, FiBookOpen, FiCpu, FiAward, FiArrowUpRight } from "react-icons/fi";
 import type { IconType } from "react-icons";
-import { timeline, type Milestone } from "../data";
+import { timeline, type MilestoneKind } from "../data";
 
-const kindIcon: Record<Milestone["kind"], IconType> = {
+const kindIcon: Record<MilestoneKind, IconType> = {
   work: FiBriefcase,
   education: FiBookOpen,
-  milestone: FiZap,
+  project: FiCpu,
+  award: FiAward,
 };
 
-const kindLabel: Record<Milestone["kind"], string> = {
+const kindLabel: Record<MilestoneKind, string> = {
   work: "Work",
   education: "Education",
-  milestone: "Milestone",
+  project: "Project",
+  award: "Milestone",
+};
+
+// text + dot colour by kind
+const kindColor: Record<MilestoneKind, string> = {
+  work: "text-muted",
+  education: "text-accent",
+  project: "text-accent2",
+  award: "text-up",
+};
+const kindDot: Record<MilestoneKind, string> = {
+  work: "bg-muted",
+  education: "bg-accent",
+  project: "bg-accent2",
+  award: "bg-up",
 };
 
 export default function Timeline() {
-  const [open, setOpen] = useState(0);
-
   return (
-    <section
-      id="journey"
-      className="border-t border-line bg-panel/40 py-20 sm:py-28"
-    >
-      <div className="mx-auto max-w-3xl px-5 sm:px-8">
+    <section id="journey" className="border-t border-line bg-panel2/40 py-20 sm:py-28">
+      <div className="mx-auto max-w-content px-5 sm:px-8">
         <header className="max-w-2xl">
-          <span className="font-mono text-xs uppercase tracking-wider text-accent">
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
             03 — Journey
           </span>
-          <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-            Career timeline
+          <h2 className="mt-3 font-serif text-3xl font-light tracking-tight sm:text-5xl">
+            From economics to engineering
           </h2>
-          <p className="mt-3 text-muted">
-            A personal path from economics into software, AI and product-focused engineering.
+          <p className="mt-4 text-muted">
+            A trajectory across finance, audit and banking into software, AI and a
+            UK MSc — scroll the rail to follow it end to end.
           </p>
         </header>
+      </div>
 
-        <div className="mt-10 rounded-3xl border border-line bg-white p-6 shadow-soft">
-          <p className="text-sm leading-relaxed text-muted">
-            Highlighting the experience, product thinking and collaborative roles that shape the work shown above.
-          </p>
-          <div className="mt-5 flex flex-wrap gap-3">
-            <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-accent">
-              AI & product
-            </span>
-            <span className="rounded-full bg-panel px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-muted">
-              Banking & audit
-            </span>
-            <span className="rounded-full bg-panel px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-muted">
-              Data storytelling
-            </span>
-          </div>
-        </div>
-
-        <ol className="relative mt-12">
-          {/* spine */}
-          <span
-            aria-hidden
-            className="absolute left-[15px] top-2 bottom-2 w-px bg-line"
-          />
-
+      {/* horizontal rail */}
+      <div className="no-scrollbar mt-12 overflow-x-auto pb-4">
+        <div className="mx-auto flex min-w-max gap-5 px-5 sm:px-8 lg:px-[max(2rem,calc((100vw-72rem)/2))]">
           {timeline.map((m, i) => {
             const Icon = kindIcon[m.kind];
-            const isOpen = open === i;
-            return (
-              <li key={m.title} className="relative pl-12 pb-6 last:pb-0">
-                {/* node */}
-                <button
-                  onClick={() => setOpen(i)}
-                  aria-expanded={isOpen}
-                  className="group flex w-full items-start gap-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-                >
-                  <span
-                    className={[
-                      "absolute left-0 top-0 grid h-8 w-8 place-items-center rounded-full border transition-colors",
-                      isOpen
-                        ? "border-accent bg-accent text-white"
-                        : "border-line bg-white text-muted group-hover:border-accent/40 group-hover:text-ink",
-                    ].join(" ")}
-                  >
-                    <Icon className="h-4 w-4" aria-hidden />
+            const card = (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.4, delay: (i % 4) * 0.05 }}
+                className="relative flex h-full w-[260px] flex-col rounded-2xl border border-line bg-panel p-5 transition-colors group-hover:border-accent/40"
+              >
+                {/* connector node */}
+                <span className={`absolute -top-[34px] left-6 h-3 w-3 rounded-full ring-4 ring-bg ${kindDot[m.kind]}`} />
+
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs text-muted">{m.period}</span>
+                  <span className={`inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wide ${kindColor[m.kind]}`}>
+                    <Icon className="h-3.5 w-3.5" aria-hidden />
+                    {kindLabel[m.kind]}
                   </span>
+                </div>
 
-                  <div className="flex-1 rounded-2xl border border-line bg-white px-4 py-3 transition-colors group-hover:border-accent/30">
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-display text-base font-semibold tracking-tight">
-                            {m.title}
-                          </h3>
-                          <span className="rounded-md bg-panel px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-muted">
-                            {kindLabel[m.kind]}
-                          </span>
-                        </div>
-                        <p className="text-sm text-muted">{m.org}</p>
-                      </div>
-                      <span className="shrink-0 font-mono text-xs text-muted">
-                        {m.period}
-                      </span>
-                    </div>
+                <h3 className="mt-3 font-display text-base font-semibold tracking-tight text-ink">
+                  {m.title}
+                </h3>
+                <p className="text-sm text-muted">{m.org}</p>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-ink/75">
+                  {m.description}
+                </p>
 
-                    <AnimatePresence initial={false}>
-                      {isOpen && (
-                        <motion.p
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.28, ease: "easeInOut" }}
-                          className="overflow-hidden text-sm leading-relaxed text-ink/80"
-                        >
-                          <span className="mt-3 block">{m.description}</span>
-                        </motion.p>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </button>
-              </li>
+                {m.slug && (
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-accent">
+                    Case study <FiArrowUpRight className="h-4 w-4" aria-hidden />
+                  </span>
+                )}
+              </motion.div>
+            );
+
+            return (
+              <div key={m.title} className="group relative pt-9">
+                {/* spine segment */}
+                <span aria-hidden className="absolute left-0 right-0 top-[28px] h-px bg-line" />
+                {m.slug ? (
+                  <Link
+                    href={`/projects/${m.slug}`}
+                    className="block rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                  >
+                    {card}
+                  </Link>
+                ) : (
+                  card
+                )}
+              </div>
             );
           })}
-        </ol>
+        </div>
       </div>
     </section>
   );
