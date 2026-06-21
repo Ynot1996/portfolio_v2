@@ -23,7 +23,7 @@ const ProjectCard = forwardRef<HTMLDivElement, { project: Project }>(
         className="group flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-panel outline-none transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-lift focus-visible:ring-2 focus-visible:ring-accent"
       >
         {/* image */}
-        <div className="relative aspect-[16/10] overflow-hidden">
+        <div className="relative aspect-[16/9] overflow-hidden">
           <Image
             src={project.image}
             alt={project.title}
@@ -47,15 +47,15 @@ const ProjectCard = forwardRef<HTMLDivElement, { project: Project }>(
         </div>
 
         {/* body */}
-        <div className="flex flex-1 flex-col p-5">
+        <div className="flex flex-1 flex-col p-4">
           {project.metric && (
             <div className="font-mono text-xs font-medium text-accent">{project.metric}</div>
           )}
-          <p className="mt-2 text-sm leading-relaxed text-muted line-clamp-3">
+          <p className="mt-1.5 text-sm leading-relaxed text-muted line-clamp-2">
             {project.oneLiner}
           </p>
 
-          <ul className="mt-4 flex flex-wrap gap-2">
+          <ul className="mt-3 flex flex-wrap gap-2">
             {project.tags.slice(0, 4).map((t) => (
               <li
                 key={t}
@@ -66,7 +66,7 @@ const ProjectCard = forwardRef<HTMLDivElement, { project: Project }>(
             ))}
           </ul>
 
-          <div className="mt-auto flex items-center justify-between border-t border-line pt-4">
+          <div className="mt-auto flex items-center justify-between border-t border-line pt-3">
             <span className="font-mono text-[11px] uppercase tracking-wide text-muted">
               {project.period}
             </span>

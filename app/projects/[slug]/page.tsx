@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 import { projects, getProject } from "../../data";
 import ArchitectureDiagram from "../../components/ArchitectureDiagram";
+import Footer from "../../components/Footer";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -205,6 +206,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           </Link>
         </nav>
       </section>
+      <Footer />
     </main>
   );
 }

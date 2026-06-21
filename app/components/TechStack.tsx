@@ -11,7 +11,7 @@ function TechItem({ tech }: { tech: Tech }) {
         hidden: { opacity: 0, y: 12 },
         show: { opacity: 1, y: 0 },
       }}
-      className="group flex items-center gap-3 rounded-xl border border-line bg-panel px-3.5 py-3 transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-soft"
+      className="group flex items-center gap-3 rounded-xl border border-line bg-panel px-3.5 py-2.5 transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-soft"
     >
       <span
         className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-panel2 transition-colors"
@@ -19,11 +19,11 @@ function TechItem({ tech }: { tech: Tech }) {
       >
         {Icon ? (
           <Icon
-            className="h-5 w-5 text-muted transition-colors group-hover:text-[color:var(--c)]"
+            className="h-5 w-5 text-[color:var(--c)]"
             aria-hidden
           />
         ) : (
-          <span className="font-mono text-xs font-semibold text-muted group-hover:text-accent">
+          <span className="font-mono text-xs font-semibold text-accent">
             {name.slice(0, 2)}
           </span>
         )}
@@ -35,22 +35,25 @@ function TechItem({ tech }: { tech: Tech }) {
 
 export default function TechStack() {
   return (
-    <section id="stack" className="border-t border-line bg-panel2/40 py-20 sm:py-28">
+    <section
+      id="stack"
+      className="snap-section flex min-h-screen flex-col justify-center border-t border-line bg-panel2/40 py-24"
+    >
       <div className="mx-auto max-w-content px-5 sm:px-8">
         <header className="max-w-2xl">
           <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
             01 — Toolkit
           </span>
-          <h2 className="mt-3 font-serif text-3xl font-light tracking-tight sm:text-5xl">
+          <h2 className="mt-2 font-serif text-3xl font-light tracking-tight sm:text-4xl">
             The stack I build with
           </h2>
-          <p className="mt-4 text-muted">
+          <p className="mt-3 text-sm text-muted">
             Python-first across full-stack, AI/ML and fintech — with C# / .NET, cloud
             tooling and a habit of designing systems before writing code.
           </p>
         </header>
 
-        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
           {techGroups.map((group) => (
             <motion.div
               key={group.category}
@@ -66,7 +69,7 @@ export default function TechStack() {
                 <span className="h-px w-6 bg-line" />
                 {group.category}
               </h3>
-              <ul className="grid gap-2.5">
+              <ul className="grid gap-2">
                 {group.items.map((t) => (
                   <TechItem key={t.name} tech={t} />
                 ))}

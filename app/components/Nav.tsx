@@ -63,7 +63,7 @@ export default function Nav() {
             </Link>
           ))}
           <Link
-            href="/#contact"
+            href="/contact"
             className="ml-2 rounded-lg bg-ink px-4 py-2 text-sm font-medium text-bg outline-none transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-accent"
           >
             Contact
@@ -108,7 +108,7 @@ export default function Nav() {
                 </Link>
               ))}
               <Link
-                href="/#contact"
+                href="/contact"
                 onClick={() => setOpen(false)}
                 className="mt-1 rounded-xl bg-ink px-4 py-3 text-center text-base font-medium text-bg"
               >
