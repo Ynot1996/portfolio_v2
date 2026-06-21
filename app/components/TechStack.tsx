@@ -35,10 +35,7 @@ function TechItem({ tech }: { tech: Tech }) {
 
 export default function TechStack() {
   return (
-    <section
-      id="stack"
-      className="snap-section flex min-h-screen flex-col justify-center border-t border-line bg-panel2/40 py-24"
-    >
+    <section id="stack" className="border-t border-line bg-panel2/40 py-20 sm:py-28">
       <div className="mx-auto max-w-content px-5 sm:px-8">
         <header className="max-w-2xl">
           <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">

@@ -40,20 +40,6 @@ html {
   scroll-padding-top: 84px;
 }
 
-/* ---------------------- Full-page scroll snapping ------------------------ */
-/* Desktop only: each .snap-section locks to the viewport when scrolling.    */
-@media (min-width: 1024px) {
-  html {
-    /* proximity (not mandatory) so a section taller than the viewport never
-       traps scrolling, while you still lock onto a page once you pass a
-       threshold toward it */
-    scroll-snap-type: y proximity;
-  }
-  .snap-section {
-    scroll-snap-align: start;
-  }
-}
-
 body {
   background-color: rgb(var(--bg));
   color: rgb(var(--ink));
