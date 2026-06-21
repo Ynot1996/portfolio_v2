@@ -48,10 +48,15 @@ const socials = [
 
 export default function Hero() {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const realInView = useInView(ref, { once: true, margin: "-80px" });
+  // Hero is above the fold — guarantee it reveals on mount even if the
+  // in-view observer hasn't fired yet, so content can never stay hidden.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const inView = realInView || mounted;
 
   return (
-    <section id="top" className="relative overflow-hidden">
+    <section id="top" className="snap-section relative overflow-hidden">
       {/* photo background — treated as a dark band in both themes */}
       <div className="absolute inset-0">
         <Image
@@ -76,7 +81,7 @@ export default function Hero() {
 
       <div
         ref={ref}
-        className="relative mx-auto flex min-h-[92svh] max-w-content flex-col justify-center px-5 pb-20 pt-28 sm:px-8 sm:pt-32"
+        className="relative mx-auto flex min-h-screen max-w-content flex-col justify-center px-5 pb-20 pt-28 sm:px-8 sm:pt-32"
       >
         <motion.div
           initial={{ opacity: 0, y: 10 }}

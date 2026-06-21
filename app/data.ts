@@ -509,7 +509,14 @@ export const projects: Project[] = [
 
 /* -------------------------------- Timeline ------------------------------- */
 
-export type MilestoneKind = "education" | "work" | "project" | "award";
+export type MilestoneKind =
+  | "education"
+  | "work"
+  | "project"
+  | "award"
+  | "milestone";
+
+export type Phase = "Finance & economics" | "Software engineering";
 
 export interface Milestone {
   year: string;
@@ -518,11 +525,14 @@ export interface Milestone {
   org: string;
   description: string;
   kind: MilestoneKind;
+  phase: Phase; // groups the rail into a pre-transition career vs the engineering journey
   slug?: string; // links to a project detail page when relevant
 }
 
-// Oldest → newest (rendered left → right as a learning + career trajectory).
+// Oldest → newest (rendered left → right). Two phases: the pre-transition
+// finance & economics career, then the pivot into software engineering.
 export const timeline: Milestone[] = [
+  /* ------------------- Phase 1 — finance & economics ------------------- */
   {
     year: "2015",
     period: "Sep 2015 – Jun 2019",
@@ -531,42 +541,49 @@ export const timeline: Milestone[] = [
     description:
       "Foundations in data, behaviour and systems thinking that still inform how I approach software and product problems.",
     kind: "education",
+    phase: "Finance & economics",
   },
   {
     year: "2020",
     period: "Dec 2020 – May 2021",
     title: "Citigold Acquisition Officer",
-    org: "Citibank",
+    org: "Citi",
     description:
-      "Advised local and international clients on investment planning across S&P 500, Dow Jones and Nasdaq markets.",
+      "Data-driven performance analysis to spot market insights and optimise investment strategies, contributing to 3–5% account growth per quarter.",
     kind: "work",
+    phase: "Finance & economics",
   },
   {
     year: "2021",
     period: "Sep 2021 – May 2022",
-    title: "Auditor",
+    title: "Audit Innovation Officer",
     org: "Deloitte",
     description:
-      "Led data migration and system integration for 50+ companies and wrote Excel VBA automation that lifted team efficiency by 25%.",
+      "Oversaw data migration for 50+ companies (EMS → Levvia) and optimised complex Excel workflows for 30+ clients, completing audit tasks 25% faster than peers.",
     kind: "work",
+    phase: "Finance & economics",
   },
   {
     year: "2022",
     period: "Sep 2022 – Feb 2023",
     title: "Assistant Relationship Manager",
-    org: "Bank of East Asia",
+    org: "Bank of East Asia · Corporate Banking",
     description:
-      "Managed a USD 120M corporate portfolio, building data visualisation that cut processing time by 20% and feeding Moody's risk models.",
+      "Managed datasets for 20+ listed companies (USD 120M portfolio), cutting processing time 20%, and fed financial data into Moody's risk models across 5 reports.",
     kind: "work",
+    phase: "Finance & economics",
   },
+
+  /* ------------------- Phase 2 — software engineering ------------------ */
   {
     year: "2023",
     period: "Feb – May 2023",
-    title: "Stock Price Prediction (LSTM)",
-    org: "Industrial Technology Research Institute",
+    title: "AI & Big Data Course",
+    org: "Industrial Technology Research Institute (ITRI)",
     description:
-      "My first end-to-end ML project: scraping market data, training an LSTM and deploying a demo web app on AWS.",
-    kind: "project",
+      "A 350-hour program in IT fundamentals, front/back-end and applied AI. Capstone: a Stock Price Prediction model (LSTM + web scraping) deployed on AWS.",
+    kind: "education",
+    phase: "Software engineering",
     slug: "stock-price-prediction",
   },
   {
@@ -574,17 +591,30 @@ export const timeline: Milestone[] = [
     period: "Nov 2023",
     title: "Crash Course on Python",
     org: "Google · Coursera",
-    description: "Formalised Python foundations as I committed to the move into software engineering.",
-    kind: "award",
+    description:
+      "Formalised Python foundations as I committed to the move into software engineering.",
+    kind: "milestone",
+    phase: "Software engineering",
+  },
+  {
+    year: "2024",
+    period: "Jun 2024 – Mar 2025",
+    title: "Self-directed transition to software",
+    org: "Career break · self-study",
+    description:
+      "Dedicated time to a self-driven career change — mastering modern web fundamentals daily and building my first personal website.",
+    kind: "milestone",
+    phase: "Software engineering",
   },
   {
     year: "2025",
     period: "Mar – Sep 2025",
     title: "MyPocket — Full-stack Capstone",
-    org: "900-hour Bootcamp · Ministry of Labor",
+    org: "900-hour Program · Ministry of Labor",
     description:
-      "Architected a cross-platform finance system (.NET + MAUI) with JWT/RBAC, shipped to GCP Cloud Run via Docker and GitHub Actions.",
+      "Capstone of an intensive 900-hour bootcamp: a cross-platform finance system (.NET + MAUI) with JWT/RBAC, shipped to GCP Cloud Run via Docker and GitHub Actions.",
     kind: "project",
+    phase: "Software engineering",
     slug: "mypocket",
   },
   {
@@ -595,6 +625,7 @@ export const timeline: Milestone[] = [
     description:
       "Data Structures & Algorithms, OOP, Computer Systems, and AI & ML — converting strong fundamentals into formal CS.",
     kind: "education",
+    phase: "Software engineering",
   },
   {
     year: "2026",
@@ -604,6 +635,7 @@ export const timeline: Milestone[] = [
     description:
       "Random Forest on 913,320 HM Land Registry records; feature engineering took R² from negative to 0.46.",
     kind: "project",
+    phase: "Software engineering",
     slug: "house-price-predictor",
   },
   {
@@ -614,6 +646,7 @@ export const timeline: Milestone[] = [
     description:
       "Led the architecture for a 5-person Agile CS learning platform, with UML modelling and a security-first build.",
     kind: "project",
+    phase: "Software engineering",
     slug: "flashlearn",
   },
   {
@@ -624,6 +657,7 @@ export const timeline: Milestone[] = [
     description:
       "A decentralised ISA platform on Solana using smart contracts for trustless escrow and immutable repayment terms.",
     kind: "award",
+    phase: "Software engineering",
     slug: "eduinvest",
   },
   {
@@ -634,6 +668,7 @@ export const timeline: Milestone[] = [
     description:
       "A RegTech stress-tester simulating 1,000 AI virtual users over 90 days to surface compliance risk (React + FastAPI).",
     kind: "project",
+    phase: "Software engineering",
     slug: "regulens",
   },
 ];

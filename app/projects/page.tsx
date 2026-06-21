@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Projects from "../components/Projects";
+import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
   title: "Projects — Tony Kang",
@@ -9,8 +10,9 @@ export const metadata: Metadata = {
 
 export default function ProjectsIndex() {
   return (
-    <main className="pt-16">
+    <main>
       <Projects />
+      <Footer />
     </main>
   );
 }

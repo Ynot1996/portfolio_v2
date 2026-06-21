@@ -3,7 +3,6 @@ import { Inter, Space_Grotesk, Fraunces, IBM_Plex_Mono } from "next/font/google"
 import "./globals.css";
 import ThemeProvider from "./components/ThemeProvider";
 import Nav from "./components/Nav";
-import Footer from "./components/Footer";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -56,7 +55,6 @@ export default function RootLayout({
         <ThemeProvider>
           <Nav />
           {children}
-          <Footer />
         </ThemeProvider>
       </body>
     </html>
