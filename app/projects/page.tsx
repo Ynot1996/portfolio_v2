@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ProjectsIndex() {
   return (
-    <main>
+    <main className="pt-16">
       <Projects />
       <Footer />
     </main>

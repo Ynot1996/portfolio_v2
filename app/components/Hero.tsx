@@ -99,16 +99,25 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.05 }}
           className="display-fluid mt-6 max-w-4xl font-serif font-light text-white"
         >
-          {profile.tagline}
+          {profile.name}
         </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 14 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mt-4 font-mono text-sm uppercase tracking-[0.18em] text-accent2"
+        >
+          {profile.role}
+        </motion.p>
 
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.12 }}
+          transition={{ duration: 0.6, delay: 0.16 }}
           className="mt-5 max-w-2xl text-base leading-relaxed text-white/75 sm:text-lg"
         >
-          <span className="font-medium text-white">{profile.name}</span> — {profile.intro}
+          {profile.intro}
         </motion.p>
 
         <motion.div

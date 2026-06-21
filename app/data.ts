@@ -8,7 +8,6 @@ import {
   SiFlask,
   SiDotnet,
   SiFastapi,
-  SiSqlalchemy,
   SiBootstrap,
   SiDocker,
   SiGooglecloud,
@@ -17,6 +16,16 @@ import {
   SiPostgresql,
   SiMysql,
 } from "react-icons/si";
+import { FaAws } from "react-icons/fa";
+import { VscAzure } from "react-icons/vsc";
+import {
+  TbDatabase,
+  TbServer,
+  TbCode,
+  TbApi,
+  TbSitemap,
+  TbRefresh,
+} from "react-icons/tb";
 
 /* -------------------------------- Profile -------------------------------- */
 
@@ -58,7 +67,7 @@ export interface Stat {
 export const stats: Stat[] = [
   { label: "Featured projects", value: 8, suffix: "" },
   { label: "1st-prize hackathon", value: 1, suffix: "" },
-  { label: "Bootcamp hours", value: 900, suffix: "+" },
+  { label: "Bootcamp hours", value: 1250, suffix: "+" },
   { label: "Public repositories", value: 20, suffix: "+" },
 ];
 
@@ -75,6 +84,8 @@ export interface TechGroup {
   items: Tech[];
 }
 
+const ACCENT = "#7C3AED";
+
 export const techGroups: TechGroup[] = [
   {
     category: "Languages",
@@ -83,8 +94,8 @@ export const techGroups: TechGroup[] = [
       { name: "C#", icon: SiSharp, color: "#9B4F96" },
       { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E" },
       { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
-      { name: "SQL" },
-      { name: "VBA" },
+      { name: "SQL", icon: TbDatabase, color: ACCENT },
+      { name: "VBA", icon: TbCode, color: ACCENT },
     ],
   },
   {
@@ -95,9 +106,7 @@ export const techGroups: TechGroup[] = [
       { name: "FastAPI", icon: SiFastapi, color: "#009688" },
       { name: "ASP.NET Core", icon: SiDotnet, color: "#512BD4" },
       { name: ".NET MAUI", icon: SiDotnet, color: "#512BD4" },
-      { name: "SQLAlchemy", icon: SiSqlalchemy, color: "#D71F00" },
       { name: "Bootstrap", icon: SiBootstrap, color: "#7952B3" },
-      { name: "RESTful API" },
     ],
   },
   {
@@ -105,8 +114,8 @@ export const techGroups: TechGroup[] = [
     items: [
       { name: "Docker", icon: SiDocker, color: "#2496ED" },
       { name: "GCP Cloud Run", icon: SiGooglecloud, color: "#4285F4" },
-      { name: "AWS EC2" },
-      { name: "Azure" },
+      { name: "AWS EC2", icon: FaAws, color: "#FF9900" },
+      { name: "Azure", icon: VscAzure, color: "#0078D4" },
       { name: "GitHub Actions", icon: SiGithubactions, color: "#2088FF" },
       { name: "Git", icon: SiGit, color: "#F05032" },
     ],
@@ -116,10 +125,10 @@ export const techGroups: TechGroup[] = [
     items: [
       { name: "PostgreSQL", icon: SiPostgresql, color: "#4169E1" },
       { name: "MySQL", icon: SiMysql, color: "#4479A1" },
-      { name: "MSSQL" },
-      { name: "Google Cloud SQL" },
-      { name: "UML" },
-      { name: "Agile / Scrum" },
+      { name: "MSSQL", icon: TbServer, color: ACCENT },
+      { name: "RESTful API", icon: TbApi, color: ACCENT },
+      { name: "UML", icon: TbSitemap, color: ACCENT },
+      { name: "Agile / Scrum", icon: TbRefresh, color: ACCENT },
     ],
   },
 ];
@@ -188,8 +197,9 @@ export const projects: Project[] = [
       "A RegTech compliance stress-tester that spins up 1,000 AI-driven virtual users and runs a 90-day behavioural simulation to surface compliance risk before it reaches production.",
     tags: ["Python", "FastAPI", "React", "LLM", "Simulation"],
     metric: "1,000 virtual users · 90-day simulation",
-    image: "/images/code-abstract.jpg",
+    image: "/images/projects/regulens.jpg",
     repo: "https://github.com/Ynot1996/AI_Synthetic_Sandbox",
+    live: "https://ukfin-london.vercel.app",
     story: {
       background:
         "Financial products have to satisfy a web of compliance rules, but teams rarely have a realistic population of users to test against. I wanted a sandbox that generates synthetic — but believable — user behaviour to pressure-test compliance logic.",
@@ -236,7 +246,7 @@ export const projects: Project[] = [
       "A machine-learning model that forecasts 2025 UK property values from 913,320 HM Land Registry records — lifting R² from negative to 0.46 through careful feature engineering.",
     tags: ["Python", "scikit-learn", "Pandas", "Random Forest"],
     metric: "913,320 records · R² 0.46",
-    image: "/images/london-aerial.jpg",
+    image: "/images/projects/house-price.jpg",
     repo: "https://github.com/Ynot1996/Birmingham-House-Price-Predictor",
     story: {
       background:
@@ -282,7 +292,7 @@ export const projects: Project[] = [
       "A time-series pipeline that scrapes market data and forecasts stock prices with an LSTM network, served through a web app on AWS.",
     tags: ["Python", "LSTM", "BeautifulSoup", "AWS"],
     metric: "LSTM time-series",
-    image: "/images/devs-working.jpg",
+    image: "/images/projects/stock.jpg",
     repo: "https://github.com/Ynot1996/tony_stock",
     story: {
       background:
@@ -323,7 +333,7 @@ export const projects: Project[] = [
       "A decentralised Income Share Agreement platform on Solana that uses smart contracts to automate fund escrow and enforce transparent, immutable repayment terms.",
     tags: ["Solana", "Smart Contracts", "Web3", "React", "FinTech"],
     metric: "🏆 1st Prize",
-    image: "/images/tower-bridge-dusk.jpg",
+    image: "/images/projects/eduinvest.jpg",
     repo: "https://github.com/Ynot1996/hackathon_project_ISA",
     story: {
       background:
@@ -364,7 +374,7 @@ export const projects: Project[] = [
       "A cross-platform personal-finance system with a .NET backend and RESTful API driving both web and mobile (MAUI) clients, deployed to GCP with full CI/CD.",
     tags: ["C#", ".NET MAUI", "ASP.NET Core", "Docker", "GCP"],
     metric: "+30% data-entry efficiency",
-    image: "/images/devs-working.jpg",
+    image: "/images/projects/mypocket.jpg",
     repo: "https://github.com/Ynot1996/MyPocketSystem",
     story: {
       background:
@@ -412,7 +422,7 @@ export const projects: Project[] = [
       "A Python-based CS learning platform built by a 5-person Agile team across two sprints, with a security-first design and full UML modelling.",
     tags: ["Python", "Flask", "UML", "Agile", "Security"],
     metric: "5-person Agile · 2 sprints",
-    image: "/images/big-ben-day.jpg",
+    image: "/images/projects/flashlearn.jpg",
     // repo link to be confirmed — no public repo found under the account yet
     repo: "",
     story: {
@@ -450,7 +460,7 @@ export const projects: Project[] = [
     oneLiner:
       "A collaborative JavaScript web project focused on interaction design and shared ownership across a small team.",
     tags: ["JavaScript", "HTML/CSS", "Teamwork", "Git"],
-    image: "/images/london-aerial.jpg",
+    image: "/images/projects/placeholder.jpg",
     repo: "https://github.com/Ynot1996/focusedgroup",
     story: {
       background:
@@ -480,8 +490,9 @@ export const projects: Project[] = [
     oneLiner:
       "A browser Tic-Tac-Toe game built to drill core front-end fundamentals: game state, win detection and clean CSS.",
     tags: ["JavaScript", "CSS", "DOM", "Game"],
-    image: "/images/code-abstract.jpg",
+    image: "/images/projects/placeholder.jpg",
     repo: "https://github.com/Ynot1996/ooxx",
+    live: "https://ynot1996.github.io/ooxx/",
     story: {
       background:
         "A from-scratch Tic-Tac-Toe to drill the fundamentals — the DOM, state management and styling.",
@@ -516,7 +527,7 @@ export type MilestoneKind =
   | "award"
   | "milestone";
 
-export type Phase = "Finance & economics" | "Software engineering";
+export type Phase = "Finance & economics" | "Foundation" | "United Kingdom";
 
 export interface Milestone {
   year: string;
@@ -583,7 +594,7 @@ export const timeline: Milestone[] = [
     description:
       "A 350-hour program in IT fundamentals, front/back-end and applied AI. Capstone: a Stock Price Prediction model (LSTM + web scraping) deployed on AWS.",
     kind: "education",
-    phase: "Software engineering",
+    phase: "Foundation",
     slug: "stock-price-prediction",
   },
   {
@@ -594,7 +605,7 @@ export const timeline: Milestone[] = [
     description:
       "Formalised Python foundations as I committed to the move into software engineering.",
     kind: "milestone",
-    phase: "Software engineering",
+    phase: "Foundation",
   },
   {
     year: "2024",
@@ -604,7 +615,7 @@ export const timeline: Milestone[] = [
     description:
       "Dedicated time to a self-driven career change — mastering modern web fundamentals daily and building my first personal website.",
     kind: "milestone",
-    phase: "Software engineering",
+    phase: "Foundation",
   },
   {
     year: "2025",
@@ -614,7 +625,7 @@ export const timeline: Milestone[] = [
     description:
       "Capstone of an intensive 900-hour bootcamp: a cross-platform finance system (.NET + MAUI) with JWT/RBAC, shipped to GCP Cloud Run via Docker and GitHub Actions.",
     kind: "project",
-    phase: "Software engineering",
+    phase: "Foundation",
     slug: "mypocket",
   },
   {
@@ -625,7 +636,7 @@ export const timeline: Milestone[] = [
     description:
       "Data Structures & Algorithms, OOP, Computer Systems, and AI & ML — converting strong fundamentals into formal CS.",
     kind: "education",
-    phase: "Software engineering",
+    phase: "United Kingdom",
   },
   {
     year: "2026",
@@ -635,7 +646,7 @@ export const timeline: Milestone[] = [
     description:
       "Random Forest on 913,320 HM Land Registry records; feature engineering took R² from negative to 0.46.",
     kind: "project",
-    phase: "Software engineering",
+    phase: "United Kingdom",
     slug: "house-price-predictor",
   },
   {
@@ -646,7 +657,7 @@ export const timeline: Milestone[] = [
     description:
       "Led the architecture for a 5-person Agile CS learning platform, with UML modelling and a security-first build.",
     kind: "project",
-    phase: "Software engineering",
+    phase: "United Kingdom",
     slug: "flashlearn",
   },
   {
@@ -657,7 +668,7 @@ export const timeline: Milestone[] = [
     description:
       "A decentralised ISA platform on Solana using smart contracts for trustless escrow and immutable repayment terms.",
     kind: "award",
-    phase: "Software engineering",
+    phase: "United Kingdom",
     slug: "eduinvest",
   },
   {
@@ -668,7 +679,7 @@ export const timeline: Milestone[] = [
     description:
       "A RegTech stress-tester simulating 1,000 AI virtual users over 90 days to surface compliance risk (React + FastAPI).",
     kind: "project",
-    phase: "Software engineering",
+    phase: "United Kingdom",
     slug: "regulens",
   },
 ];

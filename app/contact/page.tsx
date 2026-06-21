@@ -11,9 +11,8 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <>
-      <main className="flex min-h-screen flex-col">
-        <section className="flex flex-1 items-center justify-center bg-grid px-5 pt-16 sm:px-8">
+    <main className="flex min-h-screen flex-col">
+      <section className="flex flex-1 items-center justify-center bg-grid px-5 pt-16 sm:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
               Contact
@@ -55,9 +54,8 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
-        </section>
-        <Footer />
-      </main>
-    </>
+      </section>
+      <Footer />
+    </main>
   );
 }
