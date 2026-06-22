@@ -194,47 +194,42 @@ export const projects: Project[] = [
     period: "2026",
     role: "Solo build",
     oneLiner:
-      "A RegTech compliance stress-tester that spins up 1,000 AI-driven virtual users and runs a 90-day behavioural simulation to surface compliance risk before it reaches production.",
-    tags: ["Python", "FastAPI", "React", "LLM", "Simulation"],
-    metric: "1,000 virtual users · 90-day simulation",
+      "A platform that helps regulators like the FCA rapidly analyse consumer complaints and flag emerging harm early.",
+    tags: ["Python", "FastAPI", "React", "NLP", "LLM"],
+    metric: "Ranks complaint harm for supervisors",
     image: "/images/projects/regulens.jpg",
-    repo: "https://github.com/Ynot1996/AI_Synthetic_Sandbox",
+    repo: "https://github.com/Ynot1996/ukfin-london",
     live: "https://ukfin-london.vercel.app",
     story: {
       background:
-        "Financial products have to satisfy a web of compliance rules, but teams rarely have a realistic population of users to test against. I wanted a sandbox that generates synthetic — but believable — user behaviour to pressure-test compliance logic.",
+        "Regulators like the FCA receive huge volumes of consumer complaints, but spotting systemic harm across them is slow and largely manual.",
       challenge:
-        "Model a thousand distinct users with plausible, varied behaviour over time, then turn raw events into compliance signals — fast enough to iterate on.",
+        "Read the entire complaints corpus, group recurring problems, and decide what a supervision team should act on first.",
       approach:
-        "A FastAPI backend orchestrates an agent population where each virtual user has a profile that drives actions across a simulated 90-day window. A React dashboard visualises where compliance stress emerges at the population level.",
+        "ReguLens ingests the complaints corpus and uses NLP and LLMs to cluster recurring harm, then ranks each cluster by severity and volume. A React dashboard, backed by a FastAPI service, surfaces the highest-priority issues for supervisors.",
       outcome:
-        "An end-to-end stress-testing harness where compliance hotspots surface from population behaviour, rather than from hand-written test cases.",
+        "A supervision tool that turns a raw complaints firehose into a ranked, actionable early-warning list.",
     },
     architecture: {
       summary:
-        "A simulation engine sits between a React control surface and an event store, generating and scoring synthetic user behaviour.",
+        "Complaints flow through an NLP/LLM pipeline that clusters and ranks harm, surfaced to supervisors via a React dashboard.",
       layers: [
-        { title: "Client", nodes: [{ label: "React Dashboard", sub: "controls + risk views" }] },
+        { title: "Client", nodes: [{ label: "React Dashboard", sub: "ranked harm views" }] },
         { title: "API", nodes: [{ label: "FastAPI", sub: "REST endpoints" }] },
         {
-          title: "Simulation Engine",
+          title: "Analysis Pipeline",
           nodes: [
-            { label: "Agent Population", sub: "1,000 virtual users" },
-            { label: "Scheduler", sub: "90-day timeline" },
-            { label: "Compliance Scoring" },
+            { label: "Ingestion", sub: "complaints corpus" },
+            { label: "NLP / LLM Clustering" },
+            { label: "Severity Ranking" },
           ],
         },
         {
           title: "Data",
-          nodes: [
-            { label: "Event Store" },
-            { label: "Metrics / Aggregates" },
-          ],
+          nodes: [{ label: "Complaints Store" }, { label: "Clusters / Scores" }],
         },
       ],
     },
-    note:
-      "Internal layout inferred from the repo description; confirm exact engine/data details.",
   },
   {
     slug: "house-price-predictor",
@@ -243,7 +238,7 @@ export const projects: Project[] = [
     period: "Jan 2026",
     role: "Personal project",
     oneLiner:
-      "A machine-learning model that forecasts 2025 UK property values from 913,320 HM Land Registry records — lifting R² from negative to 0.46 through careful feature engineering.",
+      "A machine-learning model that forecasts UK house prices from 913,320 HM Land Registry records.",
     tags: ["Python", "scikit-learn", "Pandas", "Random Forest"],
     metric: "913,320 records · R² 0.46",
     image: "/images/projects/house-price.jpg",
@@ -289,7 +284,7 @@ export const projects: Project[] = [
     period: "Feb – May 2023",
     role: "Team project · ITRI",
     oneLiner:
-      "A time-series pipeline that scrapes market data and forecasts stock prices with an LSTM network, served through a web app on AWS.",
+      "An LSTM time-series pipeline that scrapes market data and forecasts stock prices, served on AWS.",
     tags: ["Python", "LSTM", "BeautifulSoup", "AWS"],
     metric: "LSTM time-series",
     image: "/images/projects/stock.jpg",
@@ -330,7 +325,7 @@ export const projects: Project[] = [
     role: "Team · FrontierTechX Hackathon",
     award: "🏆 1st Prize · FrontierTechX",
     oneLiner:
-      "A decentralised Income Share Agreement platform on Solana that uses smart contracts to automate fund escrow and enforce transparent, immutable repayment terms.",
+      "A decentralised Income Share Agreement platform on Solana with trustless escrow and immutable repayment terms.",
     tags: ["Solana", "Smart Contracts", "Web3", "React", "FinTech"],
     metric: "🏆 1st Prize",
     image: "/images/projects/eduinvest.jpg",
@@ -371,11 +366,12 @@ export const projects: Project[] = [
     period: "Mar – Sep 2025",
     role: "Capstone · 900-hour bootcamp",
     oneLiner:
-      "A cross-platform personal-finance system with a .NET backend and RESTful API driving both web and mobile (MAUI) clients, deployed to GCP with full CI/CD.",
+      "A cross-platform personal-finance app with a .NET backend serving both web and mobile (MAUI).",
     tags: ["C#", ".NET MAUI", "ASP.NET Core", "Docker", "GCP"],
     metric: "+30% data-entry efficiency",
     image: "/images/projects/mypocket.jpg",
     repo: "https://github.com/Ynot1996/MyPocketSystem",
+    live: "https://mypocket-web-app.azurewebsites.net",
     story: {
       background:
         "Built as the capstone of an intensive 900-hour full-stack bootcamp run by Taiwan's Ministry of Labor, I wanted a real product rather than a toy CRUD app.",
@@ -419,12 +415,11 @@ export const projects: Project[] = [
     period: "Jan – Apr 2026",
     role: "Team of 5 · University of Birmingham",
     oneLiner:
-      "A Python-based CS learning platform built by a 5-person Agile team across two sprints, with a security-first design and full UML modelling.",
+      "A Python CS-learning platform built by a 5-person Agile team, with a security-first design.",
     tags: ["Python", "Flask", "UML", "Agile", "Security"],
     metric: "5-person Agile · 2 sprints",
     image: "/images/projects/flashlearn.jpg",
-    // repo link to be confirmed — no public repo found under the account yet
-    repo: "",
+    repo: "https://github.com/Ynot1996/BUS-Group-Project",
     story: {
       background:
         "A University of Birmingham team project to build a platform that helps people learn computer-science fundamentals.",
@@ -449,7 +444,6 @@ export const projects: Project[] = [
         { title: "Data", nodes: [{ label: "Database" }] },
       ],
     },
-    note: "Public repo / demo link to confirm with Tony.",
   },
   {
     slug: "focusedgroup",
@@ -458,10 +452,11 @@ export const projects: Project[] = [
     period: "Coursework",
     role: "Group project",
     oneLiner:
-      "A collaborative JavaScript web project focused on interaction design and shared ownership across a small team.",
+      "A collaborative JavaScript web app focused on interaction design and shared team ownership.",
     tags: ["JavaScript", "HTML/CSS", "Teamwork", "Git"],
     image: "/images/projects/placeholder.jpg",
     repo: "https://github.com/Ynot1996/focusedgroup",
+    live: "https://focusedgroup.onrender.com",
     story: {
       background:
         "An early group build to practise working as a team inside a shared codebase.",
@@ -488,7 +483,7 @@ export const projects: Project[] = [
     period: "Mar 2025",
     role: "Course project",
     oneLiner:
-      "A browser Tic-Tac-Toe game built to drill core front-end fundamentals: game state, win detection and clean CSS.",
+      "A browser Tic-Tac-Toe game drilling front-end fundamentals — state, win detection, clean CSS.",
     tags: ["JavaScript", "CSS", "DOM", "Game"],
     image: "/images/projects/placeholder.jpg",
     repo: "https://github.com/Ynot1996/ooxx",
