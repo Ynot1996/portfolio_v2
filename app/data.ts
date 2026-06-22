@@ -191,7 +191,7 @@ export const projects: Project[] = [
     slug: "regulens",
     title: "ReguLens",
     category: "AI & Data",
-    period: "2026",
+    period: "Jun 2026",
     role: "Solo build",
     oneLiner:
       "A platform that helps regulators like the FCA rapidly analyse consumer complaints and flag emerging harm early.",
@@ -277,45 +277,6 @@ export const projects: Project[] = [
       ],
     },
   },
-  {
-    slug: "stock-price-prediction",
-    title: "Stock Price Prediction (LSTM)",
-    category: "AI & Data",
-    period: "Feb – May 2023",
-    role: "Team project · ITRI",
-    oneLiner:
-      "An LSTM time-series pipeline that scrapes market data and forecasts stock prices, served on AWS.",
-    tags: ["Python", "LSTM", "BeautifulSoup", "AWS"],
-    metric: "LSTM time-series",
-    image: "/images/projects/stock.jpg",
-    repo: "https://github.com/Ynot1996/tony_stock",
-    story: {
-      background:
-        "At the Industrial Technology Research Institute (ITRI) I joined a team exploring whether deep learning could forecast short-term stock movements.",
-      challenge:
-        "Getting clean, continuous market data and framing price history as a supervised time-series problem the model could actually learn from.",
-      approach:
-        "We used Python with Requests and BeautifulSoup to scrape price data, then trained an LSTM for time-series forecasting, iterating with teammates to refine the analysis.",
-      outcome:
-        "We deployed a web application on AWS to demonstrate predictions — my first end-to-end machine-learning and cloud project.",
-    },
-    architecture: {
-      layers: [
-        { title: "Ingestion", nodes: [{ label: "Web Crawler", sub: "Requests + BeautifulSoup" }] },
-        { title: "Storage", nodes: [{ label: "Price Dataset" }] },
-        {
-          title: "Model",
-          nodes: [
-            { label: "LSTM", sub: "time-series forecast" },
-            { label: "Training / Inference" },
-          ],
-        },
-        { title: "Delivery", nodes: [{ label: "Web App", sub: "AWS EC2" }] },
-      ],
-    },
-    note: "Repo link points to tony_stock; confirm the canonical repo for this project.",
-  },
-
   /* ----------------------------- Hackathon ----------------------------- */
   {
     slug: "eduinvest",
@@ -449,32 +410,38 @@ export const projects: Project[] = [
     slug: "focusedgroup",
     title: "focusedgroup",
     category: "Team & Course",
-    period: "Coursework",
-    role: "Group project",
+    period: "Feb – May 2023",
+    role: "Team project · ITRI",
     oneLiner:
-      "A collaborative JavaScript web app focused on interaction design and shared team ownership.",
-    tags: ["JavaScript", "HTML/CSS", "Teamwork", "Git"],
-    image: "/images/projects/placeholder.jpg",
+      "A financial platform with real-time stock data and LSTM-powered price forecasting, built as part of the ITRI AI & Big Data programme.",
+    tags: ["JavaScript", "Python", "LSTM", "FinTech"],
+    image: "/images/projects/stock.jpg",
     repo: "https://github.com/Ynot1996/focusedgroup",
     live: "https://focusedgroup.onrender.com",
     story: {
       background:
-        "An early group build to practise working as a team inside a shared codebase.",
+        "As the capstone of the ITRI AI & Big Data programme, our team set out to build a real financial platform — not just a demo — with live market data and a machine-learning forecasting layer.",
       challenge:
-        "Dividing work cleanly and keeping a consistent user experience across multiple contributors.",
+        "Combining a reliable financial data feed, an LSTM time-series model, and a usable web interface into one cohesive team product on a short timeline.",
       approach:
-        "We collaborated on a JavaScript front-end, splitting features and integrating them into one coherent experience using a shared git workflow.",
+        "We scraped market data with Python (Requests / BeautifulSoup) and trained an LSTM model for price forecasting. A JavaScript front-end surfaces the predictions alongside real-time stock information in a clean, shared interface built collaboratively via Git.",
       outcome:
-        "A shipped group project and hands-on experience with collaborative version control.",
+        "A shipped financial platform with working stock prediction — and my first experience integrating ML output into a deployed web product.",
     },
     architecture: {
+      summary: "A Python ML pipeline feeds predictions into a JavaScript financial dashboard.",
       layers: [
-        { title: "Client", nodes: [{ label: "HTML / CSS UI" }] },
-        { title: "Logic", nodes: [{ label: "JavaScript", sub: "feature modules" }] },
-        { title: "Data", nodes: [{ label: "Static / Local State" }] },
+        { title: "Client", nodes: [{ label: "JS Financial Dashboard", sub: "real-time data + charts" }] },
+        {
+          title: "ML Pipeline",
+          nodes: [
+            { label: "Web Crawler", sub: "Requests + BeautifulSoup" },
+            { label: "LSTM Model", sub: "time-series forecast" },
+          ],
+        },
+        { title: "Data", nodes: [{ label: "Price Dataset" }, { label: "Prediction Output" }] },
       ],
     },
-    note: "Limited public detail — refine story and dates.",
   },
   {
     slug: "ooxx",
@@ -587,10 +554,10 @@ export const timeline: Milestone[] = [
     title: "AI & Big Data Course",
     org: "Industrial Technology Research Institute (ITRI)",
     description:
-      "A 350-hour program in IT fundamentals, front/back-end and applied AI. Capstone: a Stock Price Prediction model (LSTM + web scraping) deployed on AWS.",
+      "A 350-hour program in IT fundamentals, front/back-end and applied AI. Capstone: a financial platform with LSTM stock forecasting (focusedgroup) deployed as a team.",
     kind: "education",
     phase: "Foundation",
-    slug: "stock-price-prediction",
+    slug: "focusedgroup",
   },
   {
     year: "2023",
@@ -668,11 +635,11 @@ export const timeline: Milestone[] = [
   },
   {
     year: "2026",
-    period: "2026",
+    period: "Jun 2026",
     title: "ReguLens",
     org: "Personal project",
     description:
-      "A RegTech stress-tester simulating 1,000 AI virtual users over 90 days to surface compliance risk (React + FastAPI).",
+      "A consumer complaint early-warning platform for regulators like the FCA — NLP/LLM clustering and severity ranking via React + FastAPI.",
     kind: "project",
     phase: "United Kingdom",
     slug: "regulens",
