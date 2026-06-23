@@ -63,13 +63,8 @@ export interface Stat {
   prefix?: string;
 }
 
-// Honest, verifiable numbers.
-export const stats: Stat[] = [
-  { label: "Featured projects", value: 8, suffix: "" },
-  { label: "1st-prize hackathon", value: 1, suffix: "" },
-  { label: "Bootcamp hours", value: 1250, suffix: "+" },
-  { label: "Public repositories", value: 20, suffix: "+" },
-];
+// `stats` is defined after the `projects` array so the project count can be
+// derived rather than hand-maintained — see the export below.
 
 /* ------------------------------- Tech Stack ------------------------------ */
 
@@ -172,6 +167,9 @@ export interface Project {
   metric?: string;
   award?: string;
   image: string;
+  /** How the screenshot fits its frame. Default "cover"; use "contain" for
+   *  wide banners or tall screenshots that crop badly when covered. */
+  imageFit?: "cover" | "contain";
   repo?: string;
   live?: string;
   story: {
@@ -197,7 +195,7 @@ export const projects: Project[] = [
       "A platform that helps regulators like the FCA rapidly analyse consumer complaints and flag emerging harm early.",
     tags: ["Python", "FastAPI", "React", "NLP", "LLM"],
     metric: "Ranks complaint harm for supervisors",
-    image: "/images/projects/regulens.jpg",
+    image: "/images/projects/regulens.png",
     repo: "https://github.com/Ynot1996/ukfin-london",
     live: "https://ukfin-london.vercel.app",
     story: {
@@ -289,7 +287,8 @@ export const projects: Project[] = [
       "A decentralised Income Share Agreement platform on Solana with trustless escrow and immutable repayment terms.",
     tags: ["Solana", "Smart Contracts", "Web3", "React", "FinTech"],
     metric: "🏆 1st Prize",
-    image: "/images/projects/eduinvest.jpg",
+    image: "/images/projects/eduinvest.jpeg",
+    imageFit: "contain",
     repo: "https://github.com/Ynot1996/hackathon_project_ISA",
     story: {
       background:
@@ -330,7 +329,8 @@ export const projects: Project[] = [
       "A cross-platform personal-finance app with a .NET backend serving both web and mobile (MAUI).",
     tags: ["C#", ".NET MAUI", "ASP.NET Core", "Docker", "GCP"],
     metric: "+30% data-entry efficiency",
-    image: "/images/projects/mypocket.jpg",
+    image: "/images/projects/MyPocket.png",
+    imageFit: "contain",
     repo: "https://github.com/Ynot1996/MyPocketSystem",
     live: "https://mypocket-web-app.azurewebsites.net",
     story: {
@@ -379,7 +379,7 @@ export const projects: Project[] = [
       "A Python CS-learning platform built by a 5-person Agile team, with a security-first design.",
     tags: ["Python", "Flask", "UML", "Agile", "Security"],
     metric: "5-person Agile · 2 sprints",
-    image: "/images/projects/flashlearn.jpg",
+    image: "/images/projects/flashlearn.png",
     repo: "https://github.com/Ynot1996/BUS-Group-Project",
     story: {
       background:
@@ -415,7 +415,7 @@ export const projects: Project[] = [
     oneLiner:
       "A financial platform with real-time stock data and LSTM-powered price forecasting, built as part of the ITRI AI & Big Data programme.",
     tags: ["JavaScript", "Python", "LSTM", "FinTech"],
-    image: "/images/projects/stock.jpg",
+    image: "/images/projects/focusedgroup.png",
     repo: "https://github.com/Ynot1996/focusedgroup",
     live: "https://focusedgroup.onrender.com",
     story: {
@@ -452,7 +452,8 @@ export const projects: Project[] = [
     oneLiner:
       "A browser Tic-Tac-Toe game drilling front-end fundamentals — state, win detection, clean CSS.",
     tags: ["JavaScript", "CSS", "DOM", "Game"],
-    image: "/images/projects/placeholder.jpg",
+    image: "/images/projects/ooxx.png",
+    imageFit: "contain",
     repo: "https://github.com/Ynot1996/ooxx",
     live: "https://ynot1996.github.io/ooxx/",
     story: {
@@ -478,6 +479,15 @@ export const projects: Project[] = [
       ],
     },
   },
+];
+
+// Honest, verifiable numbers. The project count is derived from `projects`
+// so it never drifts out of sync when projects are added or removed.
+export const stats: Stat[] = [
+  { label: "Featured projects", value: projects.length, suffix: "" },
+  { label: "1st-prize hackathon", value: 1, suffix: "" },
+  { label: "Bootcamp hours", value: 1250, suffix: "+" },
+  { label: "Public repositories", value: 20, suffix: "+" },
 ];
 
 /* -------------------------------- Timeline ------------------------------- */

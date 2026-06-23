@@ -54,7 +54,11 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
             fill
             priority
             sizes="100vw"
-            className="object-cover"
+            className={
+              project.imageFit === "contain"
+                ? "object-cover object-top"
+                : "object-cover"
+            }
           />
           <div className="absolute inset-0 bg-black/60" />
           <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/30 to-black/40" />

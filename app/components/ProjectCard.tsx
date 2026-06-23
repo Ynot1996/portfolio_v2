@@ -22,14 +22,19 @@ const ProjectCard = forwardRef<HTMLDivElement, { project: Project }>(
           {/* image — links to case study */}
           <Link
             href={`/projects/${project.slug}`}
-            className="relative block aspect-[16/9] overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="relative block aspect-[16/9] overflow-hidden bg-panel2 outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             <Image
               src={project.image}
               alt={project.title}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              className={[
+                "transition-transform duration-500 group-hover:scale-105",
+                project.imageFit === "contain"
+                  ? "object-contain object-top"
+                  : "object-cover",
+              ].join(" ")}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
             <span className="absolute left-3 top-3 inline-flex items-center rounded-full bg-black/55 px-3 py-1 font-mono text-[11px] text-white backdrop-blur-sm">
