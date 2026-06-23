@@ -33,7 +33,9 @@ const ProjectCard = forwardRef<HTMLDivElement, { project: Project }>(
                 "transition-transform duration-500 group-hover:scale-105",
                 project.imageFit === "contain"
                   ? "object-contain object-top"
-                  : "object-cover",
+                  : project.imageFit === "fill"
+                    ? "object-fill"
+                    : "object-cover",
               ].join(" ")}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />

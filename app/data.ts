@@ -167,9 +167,10 @@ export interface Project {
   metric?: string;
   award?: string;
   image: string;
-  /** How the screenshot fits its frame. Default "cover"; use "contain" for
-   *  wide banners or tall screenshots that crop badly when covered. */
-  imageFit?: "cover" | "contain";
+  /** How the screenshot fits its frame. Default "cover" (fill + crop);
+   *  "contain" shows the whole image letterboxed; "fill" stretches to fill
+   *  the frame with no crop (slight distortion) for wide/tall banners. */
+  imageFit?: "cover" | "contain" | "fill";
   repo?: string;
   live?: string;
   story: {
@@ -330,7 +331,7 @@ export const projects: Project[] = [
     tags: ["C#", ".NET MAUI", "ASP.NET Core", "Docker", "GCP"],
     metric: "+30% data-entry efficiency",
     image: "/images/projects/mypocket.png",
-    imageFit: "contain",
+    imageFit: "fill",
     repo: "https://github.com/Ynot1996/MyPocketSystem",
     live: "https://mypocket-web-app.azurewebsites.net",
     story: {
