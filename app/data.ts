@@ -329,7 +329,7 @@ export const projects: Project[] = [
       "A cross-platform personal-finance app with a .NET backend serving both web and mobile (MAUI).",
     tags: ["C#", ".NET MAUI", "ASP.NET Core", "Docker", "GCP"],
     metric: "+30% data-entry efficiency",
-    image: "/images/projects/MyPocket.png",
+    image: "/images/projects/mypocket.png",
     imageFit: "contain",
     repo: "https://github.com/Ynot1996/MyPocketSystem",
     live: "https://mypocket-web-app.azurewebsites.net",
