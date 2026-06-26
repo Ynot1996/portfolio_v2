@@ -39,8 +39,15 @@ const ProjectCard = forwardRef<HTMLDivElement, { project: Project }>(
               ].join(" ")}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-            <span className="absolute left-3 top-3 inline-flex items-center rounded-full bg-black/55 px-3 py-1 font-mono text-[11px] text-white backdrop-blur-sm">
-              {project.category}
+            <span className="absolute left-3 top-3 flex max-w-[80%] flex-wrap gap-1.5">
+              {project.categories.map((c) => (
+                <span
+                  key={c}
+                  className="inline-flex items-center rounded-full bg-black/55 px-2.5 py-1 font-mono text-[11px] text-white backdrop-blur-sm"
+                >
+                  {c}
+                </span>
+              ))}
             </span>
             {project.award && (
               <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-up/90 px-3 py-1 text-[11px] font-semibold text-black">

@@ -8,7 +8,7 @@ import ThemeToggle from "./ThemeToggle";
 import { profile } from "../data";
 
 const links = [
-  { label: "Work", href: "/#work" },
+  { label: "Projects", href: "/#work" },
   { label: "Journey", href: "/#journey" },
   { label: "Stack", href: "/#stack" },
 ];

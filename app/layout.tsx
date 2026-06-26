@@ -27,12 +27,12 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tony Kang — Software Engineer & MSc Computer Science",
+  title: "Tony Kang — Software Engineer",
   description:
     "Tony (Wen-Teng) Kang — software engineer and MSc Computer Science student at the University of Birmingham. Full-stack, AI/ML and fintech projects with an economics and finance background.",
-  metadataBase: new URL("https://ynot1996.github.io"),
+  metadataBase: new URL("https://portfolio-v2-eta-liard.vercel.app"),
   openGraph: {
-    title: "Tony Kang — Software Engineer & MSc Computer Science",
+    title: "Tony Kang — Software Engineer",
     description:
       "Full-stack, AI/ML and fintech projects from a software engineer with a finance background, now studying MSc CS in the UK.",
     type: "website",

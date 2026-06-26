@@ -159,7 +159,8 @@ export interface Architecture {
 export interface Project {
   slug: string;
   title: string;
-  category: Category;
+  /** A project can belong to several types (e.g. an AI hackathon team build). */
+  categories: Category[];
   period: string;
   role: string;
   oneLiner: string;
@@ -171,6 +172,8 @@ export interface Project {
    *  "contain" shows the whole image letterboxed; "fill" stretches to fill
    *  the frame with no crop (slight distortion) for wide/tall banners. */
   imageFit?: "cover" | "contain" | "fill";
+  /** Optional object-position for the detail-page hero background. */
+  heroPosition?: string;
   repo?: string;
   live?: string;
   story: {
@@ -189,9 +192,9 @@ export const projects: Project[] = [
   {
     slug: "regulens",
     title: "ReguLens",
-    category: "AI & Data",
+    categories: ["AI & Data", "Hackathon", "Team & Course"],
     period: "Jun 2026",
-    role: "Solo build",
+    role: "Team · UK FinTech Hackathon",
     oneLiner:
       "A platform that helps regulators like the FCA rapidly analyse consumer complaints and flag emerging harm early.",
     tags: ["Python", "FastAPI", "React", "NLP", "LLM"],
@@ -233,7 +236,7 @@ export const projects: Project[] = [
   {
     slug: "house-price-predictor",
     title: "Birmingham House Price Predictor",
-    category: "AI & Data",
+    categories: ["AI & Data"],
     period: "Jan 2026",
     role: "Personal project",
     oneLiner:
@@ -280,7 +283,7 @@ export const projects: Project[] = [
   {
     slug: "eduinvest",
     title: "EduInvest",
-    category: "Hackathon",
+    categories: ["Hackathon", "Team & Course"],
     period: "Mar 2026",
     role: "Team · FrontierTechX Hackathon",
     award: "🏆 1st Prize · FrontierTechX",
@@ -323,7 +326,7 @@ export const projects: Project[] = [
   {
     slug: "mypocket",
     title: "MyPocket",
-    category: "Full-stack & Side",
+    categories: ["Full-stack & Side"],
     period: "Mar – Sep 2025",
     role: "Capstone · 900-hour bootcamp",
     oneLiner:
@@ -332,6 +335,7 @@ export const projects: Project[] = [
     metric: "+30% data-entry efficiency",
     image: "/images/projects/mypocket.png",
     imageFit: "fill",
+    heroPosition: "center 22%",
     repo: "https://github.com/Ynot1996/MyPocketSystem",
     live: "https://mypocket-web-app.azurewebsites.net",
     story: {
@@ -373,7 +377,7 @@ export const projects: Project[] = [
   {
     slug: "flashlearn",
     title: "FlashLearn",
-    category: "Team & Course",
+    categories: ["Team & Course"],
     period: "Jan – Apr 2026",
     role: "Team of 5 · University of Birmingham",
     oneLiner:
@@ -410,7 +414,7 @@ export const projects: Project[] = [
   {
     slug: "focusedgroup",
     title: "focusedgroup",
-    category: "Team & Course",
+    categories: ["AI & Data", "Team & Course"],
     period: "Feb – May 2023",
     role: "Team project · ITRI",
     oneLiner:
@@ -447,9 +451,9 @@ export const projects: Project[] = [
   {
     slug: "ooxx",
     title: "OOXX — Tic-Tac-Toe",
-    category: "Team & Course",
+    categories: ["Full-stack & Side"],
     period: "Mar 2025",
-    role: "Course project",
+    role: "Personal side project",
     oneLiner:
       "A browser Tic-Tac-Toe game drilling front-end fundamentals — state, win detection, clean CSS.",
     tags: ["JavaScript", "CSS", "DOM", "Game"],
