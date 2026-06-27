@@ -54,6 +54,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
             fill
             priority
             sizes="100vw"
+            style={project.heroPosition ? { objectPosition: project.heroPosition } : undefined}
             className={
               project.imageFit === "contain"
                 ? "object-cover object-top"
@@ -73,9 +74,14 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           </Link>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 font-mono text-[11px] text-white backdrop-blur-sm">
-              {project.category}
-            </span>
+            {project.categories.map((c) => (
+              <span
+                key={c}
+                className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 font-mono text-[11px] text-white backdrop-blur-sm"
+              >
+                {c}
+              </span>
+            ))}
             {project.award && (
               <span className="inline-flex items-center gap-1 rounded-full bg-up px-3 py-1 text-[11px] font-semibold text-black">
                 <FiAward className="h-3.5 w-3.5" aria-hidden /> {project.award}
