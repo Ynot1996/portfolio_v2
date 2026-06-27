@@ -162,6 +162,10 @@ export interface Project {
   /** A project can belong to several types (e.g. an AI hackathon team build). */
   categories: Category[];
   period: string;
+  /** Most-recent month as YYYYMM — used to sort projects newest → oldest. */
+  dateValue: number;
+  /** Highlighted as a recommended pick (shows a star on the card). */
+  featured?: boolean;
   role: string;
   oneLiner: string;
   tags: string[];
@@ -187,13 +191,15 @@ export interface Project {
   note?: string;
 }
 
-export const projects: Project[] = [
+const allProjects: Project[] = [
   /* ----------------------------- AI & Data ----------------------------- */
   {
     slug: "regulens",
     title: "ReguLens",
     categories: ["AI & Data", "Hackathon", "Team & Course"],
     period: "Jun 2026",
+    dateValue: 202606,
+    featured: true,
     role: "Team · UK FinTech Hackathon",
     oneLiner:
       "A platform that helps regulators like the FCA rapidly analyse consumer complaints and flag emerging harm early.",
@@ -238,6 +244,7 @@ export const projects: Project[] = [
     title: "Birmingham House Price Predictor",
     categories: ["AI & Data"],
     period: "Jan 2026",
+    dateValue: 202601,
     role: "Personal project",
     oneLiner:
       "A machine-learning model that forecasts UK house prices from 913,320 HM Land Registry records.",
@@ -285,6 +292,7 @@ export const projects: Project[] = [
     title: "EduInvest",
     categories: ["Hackathon", "Team & Course"],
     period: "Mar 2026",
+    dateValue: 202603,
     role: "Team · FrontierTechX Hackathon",
     award: "🏆 1st Prize · FrontierTechX",
     oneLiner:
@@ -328,6 +336,7 @@ export const projects: Project[] = [
     title: "MyPocket",
     categories: ["Full-stack & Side"],
     period: "Mar – Sep 2025",
+    dateValue: 202509,
     role: "Capstone · 900-hour bootcamp",
     oneLiner:
       "A cross-platform personal-finance app with a .NET backend serving both web and mobile (MAUI).",
@@ -379,6 +388,7 @@ export const projects: Project[] = [
     title: "FlashLearn",
     categories: ["Team & Course"],
     period: "Jan – Apr 2026",
+    dateValue: 202604,
     role: "Team of 5 · University of Birmingham",
     oneLiner:
       "A Python CS-learning platform built by a 5-person Agile team, with a security-first design.",
@@ -416,6 +426,7 @@ export const projects: Project[] = [
     title: "focusedgroup",
     categories: ["AI & Data", "Team & Course"],
     period: "Feb – May 2023",
+    dateValue: 202305,
     role: "Team project · ITRI",
     oneLiner:
       "A financial platform with real-time stock data and LSTM-powered price forecasting, built as part of the ITRI AI & Big Data programme.",
@@ -453,6 +464,7 @@ export const projects: Project[] = [
     title: "OOXX — Tic-Tac-Toe",
     categories: ["Full-stack & Side"],
     period: "Mar 2025",
+    dateValue: 202503,
     role: "Personal side project",
     oneLiner:
       "A browser Tic-Tac-Toe game drilling front-end fundamentals — state, win detection, clean CSS.",
@@ -485,6 +497,11 @@ export const projects: Project[] = [
     },
   },
 ];
+
+// newest → oldest, so the grid always leads with the most recent work
+export const projects: Project[] = [...allProjects].sort(
+  (a, b) => b.dateValue - a.dateValue
+);
 
 // Honest, verifiable numbers. The project count is derived from `projects`
 // so it never drifts out of sync when projects are added or removed.

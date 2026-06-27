@@ -4,7 +4,7 @@ import { forwardRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { FiArrowUpRight, FiAward, FiExternalLink } from "react-icons/fi";
+import { FiArrowUpRight, FiAward, FiExternalLink, FiStar } from "react-icons/fi";
 import type { Project } from "../data";
 
 const ProjectCard = forwardRef<HTMLDivElement, { project: Project }>(
@@ -39,29 +39,42 @@ const ProjectCard = forwardRef<HTMLDivElement, { project: Project }>(
               ].join(" ")}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-            <span className="absolute left-3 right-3 top-3 flex flex-nowrap gap-1.5">
+            <span
+              className={[
+                "absolute left-3 right-3 top-3 flex flex-nowrap gap-1.5",
+                project.featured || project.award ? "pr-9" : "",
+              ].join(" ")}
+            >
               {project.categories.map((c) => (
                 <span
                   key={c}
-                  className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-black/55 px-2.5 py-1 font-mono text-[11px] text-white backdrop-blur-sm"
+                  className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-black/55 px-2 py-1 font-mono text-[10px] text-white backdrop-blur-sm"
                 >
                   {c}
                 </span>
               ))}
             </span>
-            {project.award && (
+            {project.award ? (
               <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-up/90 px-3 py-1 text-[11px] font-semibold text-black">
                 <FiAward className="h-3.5 w-3.5" aria-hidden />
                 1st
               </span>
-            )}
+            ) : project.featured ? (
+              <span
+                title="Recommended pick"
+                aria-label="Recommended pick"
+                className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-full bg-accent text-white shadow-soft"
+              >
+                <FiStar className="h-3.5 w-3.5 fill-current" aria-hidden />
+              </span>
+            ) : null}
             <h3 className="absolute inset-x-4 bottom-3 font-display text-xl font-semibold tracking-tight text-white">
               {project.title}
             </h3>
           </Link>
 
           {/* body */}
-          <div className="flex flex-1 flex-col p-4">
+          <div className="flex flex-1 flex-col p-5">
             <p className="text-sm leading-relaxed text-muted line-clamp-3">
               {project.oneLiner}
             </p>
