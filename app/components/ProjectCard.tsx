@@ -39,11 +39,11 @@ const ProjectCard = forwardRef<HTMLDivElement, { project: Project }>(
               ].join(" ")}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-            <span className="absolute left-3 top-3 flex max-w-[80%] flex-wrap gap-1.5">
+            <span className="absolute left-3 right-3 top-3 flex flex-nowrap gap-1.5">
               {project.categories.map((c) => (
                 <span
                   key={c}
-                  className="inline-flex items-center rounded-full bg-black/55 px-2.5 py-1 font-mono text-[11px] text-white backdrop-blur-sm"
+                  className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-black/55 px-2.5 py-1 font-mono text-[11px] text-white backdrop-blur-sm"
                 >
                   {c}
                 </span>
@@ -66,7 +66,7 @@ const ProjectCard = forwardRef<HTMLDivElement, { project: Project }>(
               {project.oneLiner}
             </p>
 
-            <ul className="mt-3 flex flex-wrap gap-2">
+            <ul className="mt-4 flex flex-wrap gap-2 pb-1">
               {project.tags.slice(0, 4).map((t) => (
                 <li
                   key={t}
@@ -77,7 +77,7 @@ const ProjectCard = forwardRef<HTMLDivElement, { project: Project }>(
               ))}
             </ul>
 
-            <div className="mt-auto flex items-center justify-between border-t border-line pt-3">
+            <div className="mt-auto flex items-center justify-between border-t border-line pt-4">
               <span className="font-mono text-[11px] uppercase tracking-wide text-muted">
                 {project.period}
               </span>
