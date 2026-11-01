@@ -45,12 +45,12 @@ export interface Profile {
 export const profile: Profile = {
   name: "Tony (Wen-Teng) Kang",
   shortName: "Tony Kang",
-  role: "Software Engineer · MSc Computer Science",
+  role: "Software Engineer · MSc Computer Science (Distinction)",
   tagline: "Engineering clarity from data.",
   intro:
-    "I build full-stack products, AI/ML tools and fintech systems — pairing a finance and economics background with hands-on engineering. Currently reading MSc Computer Science at the University of Birmingham.",
-  location: "Birmingham, United Kingdom",
-  status: "Graduate Visa · right to work in the UK",
+    "I build full-stack products, AI/ML tools and fintech systems — pairing a finance and economics background with hands-on engineering. MSc Computer Science (Distinction), University of Birmingham. Now looking for graduate and junior software engineering roles in the UK.",
+  location: "London, United Kingdom",
+  status: "Open to work · Graduate Visa, no sponsorship needed to start",
   email: "wen114teng@gmail.com",
   github: "https://github.com/Ynot1996",
   linkedin: "https://www.linkedin.com/in/tony-kang-a353271bb/",

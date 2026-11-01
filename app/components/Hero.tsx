@@ -99,7 +99,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.05 }}
           className="display-fluid mt-6 max-w-4xl font-serif font-light text-white"
         >
-          {profile.name}
+          {profile.shortName}
         </motion.h1>
 
         <motion.p
