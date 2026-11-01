@@ -16,7 +16,10 @@ export default function Projects() {
   const [page, setPage] = useState(0);
 
   const filtered = useMemo(
-    () => (active === "All" ? projects : projects.filter((p) => p.category === active)),
+    () =>
+      active === "All"
+        ? projects
+        : projects.filter((p) => p.categories.includes(active)),
     [active]
   );
 
@@ -37,14 +40,14 @@ export default function Projects() {
         <header className="flex flex-wrap items-end justify-between gap-3">
           <div className="max-w-2xl">
             <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
-              02 — Selected work
+              02 — Selected cases
             </span>
             <h2 className="mt-2 font-serif text-3xl font-light tracking-tight sm:text-4xl">
               Projects, by type
             </h2>
           </div>
           <p className="max-w-md text-sm text-muted">
-            Every project opens into a full case study with the story and architecture behind it.
+            Every project opens into a full case study with the story, architecture and results behind it.
           </p>
         </header>
 
@@ -52,7 +55,9 @@ export default function Projects() {
         <div className="no-scrollbar mt-6 flex gap-2 overflow-x-auto pb-1">
           {filters.map((f) => {
             const count =
-              f === "All" ? projects.length : projects.filter((p) => p.category === f).length;
+              f === "All"
+                ? projects.length
+                : projects.filter((p) => p.categories.includes(f)).length;
             const isActive = active === f;
             return (
               <button

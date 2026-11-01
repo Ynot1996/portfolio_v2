@@ -12,6 +12,7 @@ import {
   FiTrendingUp,
   FiLayers,
   FiFlag,
+  FiMapPin,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { timeline, type Milestone, type MilestoneKind, type Phase } from "../data";
@@ -25,11 +26,17 @@ const kindIcon: Record<MilestoneKind, IconType> = {
   milestone: FiZap,
 };
 
-const phaseOrder: Phase[] = ["Finance & economics", "Foundation", "United Kingdom"];
+const phaseOrder: Phase[] = ["Finance & economics", "Foundation", "Birmingham", "London"];
 const phaseMeta: Record<Phase, { label: string; Icon: IconType; text: string; varName: string }> = {
   "Finance & economics": { label: "Finance & economics", Icon: FiTrendingUp, text: "text-muted", varName: "--muted" },
   Foundation: { label: "Foundation & prep", Icon: FiLayers, text: "text-accent", varName: "--accent" },
-  "United Kingdom": { label: "United Kingdom", Icon: FiFlag, text: "text-accent2", varName: "--accent-2" },
+  Birmingham: {
+    label: "University of Birmingham · MSc CS (Distinction)",
+    Icon: FiFlag,
+    text: "text-accent2",
+    varName: "--accent-2",
+  },
+  London: { label: "London · new chapter", Icon: FiMapPin, text: "text-up", varName: "--up" },
 };
 
 const groups = phaseOrder.map((ph) => ({
@@ -83,28 +90,37 @@ const Y0 = 52;
 const ROWGAP = 244;
 const BULGE = 78;
 const CARD_W = 196;
+const PER_ROW = 4;
 
 function DesktopRail() {
-  // assign each milestone a (col,row) in a boustrophedon grid
+  // flow the milestones, in phase order, into rows of at most PER_ROW and
+  // assign each a (col,row) in a boustrophedon grid; a phase may wrap onto
+  // the next row or start part-way along one
+  const flat = groups.flatMap((g) => g.items);
+  const rowCount = Math.ceil(flat.length / PER_ROW);
   let endCol = 0;
   const placed: { m: Milestone; col: number; row: number }[] = [];
   const rowMeta: { y: number; startCol: number; endCol: number; ltr: boolean }[] = [];
 
-  groups.forEach((g, row) => {
+  for (let row = 0; row < rowCount; row++) {
+    const items = flat.slice(row * PER_ROW, (row + 1) * PER_ROW);
     const ltr = row % 2 === 0;
     const startCol = row === 0 ? 0 : endCol;
-    g.items.forEach((m, idx) => {
+    items.forEach((m, idx) => {
       const col = ltr ? startCol + idx : startCol - idx;
       placed.push({ m, col, row });
     });
-    endCol = ltr ? startCol + g.items.length - 1 : startCol - (g.items.length - 1);
+    endCol = ltr ? startCol + items.length - 1 : startCol - (items.length - 1);
     rowMeta.push({ y: Y0 + row * ROWGAP, startCol, endCol, ltr });
-  });
+  }
+
+  // a phase label sits above the first milestone of each phase
+  const phaseStarts = placed.filter((p, i) => i === 0 || placed[i - 1].m.phase !== p.m.phase);
 
   const xAt = (col: number) => START + col * COLGAP;
   const maxCol = Math.max(...placed.map((p) => p.col));
   const width = START * 2 + maxCol * COLGAP;
-  const height = Y0 + (groups.length - 1) * ROWGAP + 200;
+  const height = Y0 + (rowCount - 1) * ROWGAP + 200;
 
   // build the snaking path with rounded U-turns
   let d = `M ${xAt(rowMeta[0].startCol)} ${rowMeta[0].y} L ${xAt(rowMeta[0].endCol)} ${rowMeta[0].y}`;
@@ -124,8 +140,9 @@ function DesktopRail() {
           <defs>
             <linearGradient id="journeyLine" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" style={{ stopColor: "rgb(var(--muted))" }} />
-              <stop offset="50%" style={{ stopColor: "rgb(var(--accent))" }} />
-              <stop offset="100%" style={{ stopColor: "rgb(var(--accent-2))" }} />
+              <stop offset="40%" style={{ stopColor: "rgb(var(--accent))" }} />
+              <stop offset="75%" style={{ stopColor: "rgb(var(--accent-2))" }} />
+              <stop offset="100%" style={{ stopColor: "rgb(var(--up))" }} />
             </linearGradient>
           </defs>
           <path d={d} stroke="url(#journeyLine)" strokeWidth={2.5} strokeLinecap="round" />
@@ -142,15 +159,16 @@ function DesktopRail() {
           ))}
         </svg>
 
-        {/* phase labels at each row's start */}
-        {rowMeta.map((rm, r) => {
-          const meta = phaseMeta[groups[r].phase];
+        {/* phase labels above each phase's first milestone */}
+        {phaseStarts.map(({ m, col, row }) => {
+          const meta = phaseMeta[m.phase];
+          const rm = rowMeta[row];
           return (
             <div
-              key={groups[r].phase}
+              key={m.phase}
               className="absolute -translate-y-full"
               style={{
-                left: xAt(rm.startCol),
+                left: xAt(col),
                 top: rm.y - 18,
                 transform: `translate(${rm.ltr ? "0" : "-100%"}, -100%)`,
               }}
@@ -225,8 +243,8 @@ export default function Timeline() {
             From economics to engineering
           </h2>
           <p className="mt-4 text-muted">
-            Three chapters — a finance &amp; economics career, a foundation-building
-            pivot, then the climb in the UK. Follow the path.
+            Four chapters — a finance &amp; economics career, a foundation-building
+            pivot, an MSc in Birmingham, and now a new start in London. Follow the path.
           </p>
         </header>
       </div>

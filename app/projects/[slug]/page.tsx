@@ -54,6 +54,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
             fill
             priority
             sizes="100vw"
+            style={project.heroPosition ? { objectPosition: project.heroPosition } : undefined}
             className={
               project.imageFit === "contain"
                 ? "object-cover object-top"
@@ -73,9 +74,14 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           </Link>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 font-mono text-[11px] text-white backdrop-blur-sm">
-              {project.category}
-            </span>
+            {project.categories.map((c) => (
+              <span
+                key={c}
+                className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 font-mono text-[11px] text-white backdrop-blur-sm"
+              >
+                {c}
+              </span>
+            ))}
             {project.award && (
               <span className="inline-flex items-center gap-1 rounded-full bg-up px-3 py-1 text-[11px] font-semibold text-black">
                 <FiAward className="h-3.5 w-3.5" aria-hidden /> {project.award}
@@ -139,7 +145,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                 </a>
               ) : (
                 <span className="rounded-xl border border-dashed border-line px-4 py-3 text-center text-xs text-muted">
-                  Repository link coming soon
+                  {project.repoNote ?? "Repository link coming soon"}
                 </span>
               )}
               {project.live && (
@@ -173,16 +179,56 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           </div>
         </div>
 
+        {/* how it works, then results */}
+        {[
+          { label: "How it works", figures: project.howItWorks },
+          { label: "Results", figures: project.results },
+        ].map(
+          ({ label, figures }) =>
+            figures && (
+              <div key={label} className="mt-16">
+                <div className="mb-6 flex items-center gap-3">
+                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
+                    {label}
+                  </span>
+                  <span className="h-px flex-1 bg-line" />
+                </div>
+                <div className="grid gap-8">
+                  {figures.map((fig) => (
+                    <figure key={fig.src} className="rounded-3xl border border-line bg-panel2/40 p-4 sm:p-6">
+                      {/* figures have white backgrounds, so frame them as light panels in both themes */}
+                      <div className="overflow-hidden rounded-2xl bg-white p-2 sm:p-4">
+                        <Image
+                          src={fig.src}
+                          alt={fig.alt}
+                          width={fig.width}
+                          height={fig.height}
+                          sizes="(max-width: 1200px) 100vw, 1100px"
+                          className="mx-auto h-auto w-full max-w-4xl"
+                        />
+                      </div>
+                      <figcaption className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-muted">
+                        {fig.caption}
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
+              </div>
+            )
+        )}
+
         {/* architecture */}
-        <div className="mt-16">
-          <div className="mb-6 flex items-center gap-3">
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
-              System architecture
-            </span>
-            <span className="h-px flex-1 bg-line" />
+        {project.architecture && (
+          <div className="mt-16">
+            <div className="mb-6 flex items-center gap-3">
+              <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
+                System architecture
+              </span>
+              <span className="h-px flex-1 bg-line" />
+            </div>
+            <ArchitectureDiagram architecture={project.architecture} />
           </div>
-          <ArchitectureDiagram architecture={project.architecture} />
-        </div>
+        )}
 
         {/* prev / next */}
         <nav className="mt-16 grid gap-4 border-t border-line pt-8 sm:grid-cols-2">

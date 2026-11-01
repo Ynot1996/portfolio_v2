@@ -1,13 +1,13 @@
 # Tony Kang — Developer Portfolio
 
 A personal portfolio for **Tony (Wen-Teng) Kang** — a software engineer with a
-finance background, currently reading MSc Computer Science at the University of
-Birmingham. Built as a fast, responsive, dark-editorial single-page site with
+finance background and an MSc Computer Science (Distinction) from the University
+of Birmingham, now based in London. Built as a fast, responsive, dark-editorial single-page site with
 full case studies for each project.
 
 🔗 **Live:** [portfolio-v2-eta-liard.vercel.app](https://portfolio-v2-eta-liard.vercel.app)
 &nbsp;·&nbsp; 💻 **GitHub:** [@Ynot1996](https://github.com/Ynot1996)
-&nbsp;·&nbsp; 💼 **LinkedIn:** [tony-kang](https://www.linkedin.com/in/tony-kang-a353271bb/)
+&nbsp;·&nbsp; 💼 **LinkedIn:** [tony-kang-uk](https://www.linkedin.com/in/tony-kang-uk)
 
 ---
 

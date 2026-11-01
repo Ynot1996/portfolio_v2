@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
-import { FiGithub, FiLinkedin, FiMail, FiArrowDown } from "react-icons/fi";
+import { FiGithub, FiLinkedin, FiMail, FiArrowDown, FiDownload } from "react-icons/fi";
 import { profile, stats, type Stat } from "../data";
 
 /* count-up for stat chips */
@@ -99,7 +99,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.05 }}
           className="display-fluid mt-6 max-w-4xl font-serif font-light text-white"
         >
-          {profile.name}
+          {profile.shortName}
         </motion.h1>
 
         <motion.p
@@ -132,6 +132,13 @@ export default function Hero() {
           >
             View work
           </Link>
+          <a
+            href={profile.cv}
+            download
+            className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/5 px-5 py-3 text-sm font-semibold text-white outline-none backdrop-blur-sm transition-transform hover:-translate-y-0.5 hover:border-white/60 focus-visible:ring-2 focus-visible:ring-accent"
+          >
+            <FiDownload className="h-4 w-4" aria-hidden /> Download CV
+          </a>
           <div className="flex gap-2">
             {socials.map(({ label, href, Icon }) => (
               <a
