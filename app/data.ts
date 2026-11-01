@@ -8,13 +8,16 @@ import {
   SiFlask,
   SiDotnet,
   SiFastapi,
-  SiBootstrap,
   SiDocker,
   SiGooglecloud,
   SiGithubactions,
   SiGit,
   SiPostgresql,
   SiMysql,
+  SiPandas,
+  SiScikitlearn,
+  SiLangchain,
+  SiPytest,
 } from "react-icons/si";
 import { FaAws } from "react-icons/fa";
 import { VscAzure } from "react-icons/vsc";
@@ -23,8 +26,6 @@ import {
   TbServer,
   TbCode,
   TbApi,
-  TbSitemap,
-  TbRefresh,
 } from "react-icons/tb";
 
 /* -------------------------------- Profile -------------------------------- */
@@ -40,6 +41,8 @@ export interface Profile {
   email: string;
   github: string;
   linkedin: string;
+  /** Public CV in /public — web copy without the phone number. */
+  cv: string;
 }
 
 export const profile: Profile = {
@@ -50,10 +53,11 @@ export const profile: Profile = {
   intro:
     "I build full-stack products, AI/ML tools and fintech systems — pairing a finance and economics background with hands-on engineering. MSc Computer Science (Distinction), University of Birmingham. Now looking for graduate and junior software engineering roles in the UK.",
   location: "London, United Kingdom",
-  status: "Open to work · Graduate Visa, no sponsorship needed to start",
+  status: "Open to work · Right to work in the UK",
   email: "wen114teng@gmail.com",
   github: "https://github.com/Ynot1996",
-  linkedin: "https://www.linkedin.com/in/tony-kang-a353271bb/",
+  linkedin: "https://www.linkedin.com/in/tony-kang-uk",
+  cv: "/Tony-Kang-CV.pdf",
 };
 
 export interface Stat {
@@ -101,7 +105,8 @@ export const techGroups: TechGroup[] = [
       { name: "FastAPI", icon: SiFastapi, color: "#009688" },
       { name: "ASP.NET Core", icon: SiDotnet, color: "#512BD4" },
       { name: ".NET MAUI", icon: SiDotnet, color: "#512BD4" },
-      { name: "Bootstrap", icon: SiBootstrap, color: "#7952B3" },
+      { name: "Entity Framework Core", icon: SiDotnet, color: "#512BD4" },
+      { name: "RESTful API", icon: TbApi, color: ACCENT },
     ],
   },
   {
@@ -116,14 +121,15 @@ export const techGroups: TechGroup[] = [
     ],
   },
   {
-    category: "Data & Practices",
+    category: "Data, AI & Testing",
     items: [
       { name: "PostgreSQL", icon: SiPostgresql, color: "#4169E1" },
       { name: "MySQL", icon: SiMysql, color: "#4479A1" },
       { name: "MSSQL", icon: TbServer, color: ACCENT },
-      { name: "RESTful API", icon: TbApi, color: ACCENT },
-      { name: "UML", icon: TbSitemap, color: ACCENT },
-      { name: "Agile / Scrum", icon: TbRefresh, color: ACCENT },
+      { name: "pandas", icon: SiPandas, color: "#E70488" },
+      { name: "scikit-learn", icon: SiScikitlearn, color: "#F7931E" },
+      { name: "LangGraph", icon: SiLangchain, color: ACCENT },
+      { name: "pytest", icon: SiPytest, color: "#0A9EDC" },
     ],
   },
 ];
@@ -155,6 +161,13 @@ export interface Architecture {
   summary?: string;
   layers: ArchLayer[];
 }
+export interface ResultFigure {
+  src: string;
+  alt: string;
+  caption: string;
+  width: number;
+  height: number;
+}
 
 export interface Project {
   slug: string;
@@ -179,6 +192,8 @@ export interface Project {
   /** Optional object-position for the detail-page hero background. */
   heroPosition?: string;
   repo?: string;
+  /** Shown instead of the repo button when the code isn't public. */
+  repoNote?: string;
   live?: string;
   story: {
     background: string;
@@ -186,7 +201,11 @@ export interface Project {
     approach: string;
     outcome: string;
   };
-  architecture: Architecture;
+  /** Figures explaining how the system works, shown before the results. */
+  howItWorks?: ResultFigure[];
+  /** A project shows its result figures, its architecture diagram, or both. */
+  results?: ResultFigure[];
+  architecture?: Architecture;
   /** Internal note: flags story details inferred beyond the CV — Tony to refine. */
   note?: string;
 }
@@ -194,17 +213,86 @@ export interface Project {
 const allProjects: Project[] = [
   /* ----------------------------- AI & Data ----------------------------- */
   {
+    slug: "multi-agent-code-repair",
+    title: "When Does Root-Cause Analysis Pay Off?",
+    categories: ["AI & Data", "Team & Course"],
+    period: "Jun – Sep 2026",
+    dateValue: 202609,
+    featured: true,
+    role: "MSc Dissertation · University of Birmingham",
+    oneLiner:
+      "A controlled study of feedback strategies in multi-agent LLM code repair — does diagnosing a bug before fixing it beat simply trying again? 6,810 task-runs say: not yet.",
+    tags: ["Python", "LangGraph", "LLM evaluation", "Statistics", "pytest"],
+    metric: "Feedback ~2× repair rate · 6,810 runs",
+    image: "/images/projects/rca/repair-rate.png",
+    repoNote: "Private repository",
+    story: {
+      background:
+        "Multi-agent code-repair systems increasingly diagnose a root cause before repairing a program, on the assumption that finding the cause produces a better fix. Few studies compare that with simply spending the same call budget on more independent attempts. My MSc dissertation measured it.",
+      challenge:
+        "Isolate the feedback step in an otherwise fixed generate–execute–repair loop and price each piece of diagnostic machinery fairly — same pipeline, same model, same call budget, and no hidden-test content ever reaching a prompt.",
+      approach:
+        "I designed a five-rung ladder — best-of-k resampling, raw execution feedback, free-form self-diagnosis, a fixed root-cause schema and an isolated Analyzer agent — built as LangGraph state machines over shared nodes, with offline tests asserting that no hidden-suite output or Coder history leaks where it shouldn't. Runs crossed HumanEval+ and LiveCodeBench with Llama 3.3 70B and 3.1 8B, three repetitions per cell: 6,810 task-runs. I spotted 27 of 63 LiveCodeBench tasks returning the same terminal error in every cell and traced 16 of them to the benchmark scorer itself; I quarantined 945 runs, rebuilt the scorer and validated it with an oracle probe and a deliberately corrupted control. Implementation was AI-assisted to my specifications: I recorded seven episodes where assistant output had to be corrected or rejected, and had every reported statistic re-derived from the raw runs before submission.",
+      outcome:
+        "Execution feedback nearly doubled the repair rate (0.264 → 0.514) and gave the 70B model +4.1 pp solve rate over call-matched resampling. Nothing above it — free-form reflection, a root-cause schema or an isolated Analyzer — added a reliable gain, and resampling was the cheapest per problem solved in every cell, by 1.8–4.2×. The practical rule: before adding a diagnosis step, check that the feedback can name the failure and that the diagnosis beats the class prior.",
+    },
+    howItWorks: [
+      {
+        src: "/images/projects/rca/pipeline.png",
+        alt: "Pipeline diagram: the Coder generates a program, the Executor runs it; a hidden suite scores pass or fail and is never shown to the model, while a visible channel of worked examples feeds a diagnosis step, after which the Coder repairs and the loop repeats until pass or budget exhausted",
+        caption:
+          "The repair loop, held fixed throughout. The Coder generates a program and a deterministic Executor runs it. A hidden suite decides pass or fail but never reaches a prompt; feedback comes only from a separate visible channel. The diagnosis step is the one thing that changes between conditions.",
+        width: 1692,
+        height: 984,
+      },
+      {
+        src: "/images/projects/rca/ladder.png",
+        alt: "The condition ladder: C0 samples and executes; C1 generates, executes and repairs; C2 and C3 add a diagnose step in the Coder's own thread; C4 adds an isolated Analyzer before repair",
+        caption:
+          "The five conditions. Each rung adds one component — execution feedback, a diagnosis turn, a fixed schema, then an isolated Analyzer agent — so each step up prices one design decision.",
+        width: 1925,
+        height: 1025,
+      },
+    ],
+    results: [
+      {
+        src: "/images/projects/rca/repair-rate.png",
+        alt: "Bar chart of repair rate by condition: C0 resampling 0.264, C1 raw feedback 0.514, C2 free-form 0.500, C3 schema 0.556, C4 isolated Analyzer 0.403",
+        caption:
+          "Repair rate on 72 shared failing starts (HumanEval+, 70B). Execution feedback nearly doubles it; the isolated Analyzer (C4) falls back.",
+        width: 1116,
+        height: 612,
+      },
+      {
+        src: "/images/projects/rca/solve-rate.png",
+        alt: "Four bar charts of solve rate by condition for HumanEval+ and LiveCodeBench with the 70B and 8B models",
+        caption:
+          "Solve rate in all four cells. Every repair strategy beats resampling for the 70B model and falls below it for the 8B.",
+        width: 2200,
+        height: 1600,
+      },
+      {
+        src: "/images/projects/rca/cost-accuracy.png",
+        alt: "Four scatter plots of solve rate against thousand tokens per task, with C0 resampling marked by grey lines",
+        caption:
+          "Solve rate against tokens spent per task. No strategy lands in the upper-left quadrant: none beats resampling on both accuracy and cost.",
+        width: 2200,
+        height: 1600,
+      },
+    ],
+  },
+  {
     slug: "regulens",
     title: "ReguLens",
     categories: ["AI & Data", "Hackathon", "Team & Course"],
     period: "Jun 2026",
     dateValue: 202606,
     featured: true,
-    role: "Team · UK FinTech Hackathon",
+    role: "Team · UKFIN+ Hackathon",
     oneLiner:
-      "A platform that helps regulators like the FCA rapidly analyse consumer complaints and flag emerging harm early.",
+      "A compliance early-warning platform that helps regulators like the FCA analyse consumer complaints and flag emerging harm early.",
     tags: ["Python", "FastAPI", "React", "NLP", "LLM"],
-    metric: "Ranks complaint harm for supervisors",
+    metric: "130,000+ complaints · recognised by the judges",
     image: "/images/projects/regulens.png",
     repo: "https://github.com/Ynot1996/ukfin-london",
     live: "https://ukfin-london.vercel.app",
@@ -214,7 +302,7 @@ const allProjects: Project[] = [
       challenge:
         "Read the entire complaints corpus, group recurring problems, and decide what a supervision team should act on first.",
       approach:
-        "ReguLens ingests the complaints corpus and uses NLP and LLMs to cluster recurring harm, then ranks each cluster by severity and volume. A React dashboard, backed by a FastAPI service, surfaces the highest-priority issues for supervisors.",
+        "ReguLens runs an LLM-driven pipeline over 130,000+ complaint records to cluster recurring harm, then ranks each cluster by severity and volume. A FastAPI service exposes live metrics and an escalation queue to a React dashboard, so supervisors see the highest-priority issues first.",
       outcome:
         "A supervision tool that turns a raw complaints firehose into a ranked, actionable early-warning list.",
     },
@@ -223,11 +311,11 @@ const allProjects: Project[] = [
         "Complaints flow through an NLP/LLM pipeline that clusters and ranks harm, surfaced to supervisors via a React dashboard.",
       layers: [
         { title: "Client", nodes: [{ label: "React Dashboard", sub: "ranked harm views" }] },
-        { title: "API", nodes: [{ label: "FastAPI", sub: "REST endpoints" }] },
+        { title: "API", nodes: [{ label: "FastAPI", sub: "live metrics · escalation queue" }] },
         {
           title: "Analysis Pipeline",
           nodes: [
-            { label: "Ingestion", sub: "complaints corpus" },
+            { label: "Ingestion", sub: "130,000+ complaints" },
             { label: "NLP / LLM Clustering" },
             { label: "Severity Ranking" },
           ],
@@ -329,19 +417,114 @@ const allProjects: Project[] = [
       ],
     },
   },
+  {
+    slug: "life200",
+    title: "Life200",
+    categories: ["AI & Data", "Full-stack & Side"],
+    period: "Oct 2026 – now",
+    dateValue: 202610,
+    role: "Solo build · in progress",
+    oneLiner:
+      "A job-search co-pilot: one master profile of everything you've done, a JD-tailored CV and answers for each role, pre-filled application forms — and you review and press submit.",
+    tags: ["Python", "FastAPI", "PostgreSQL", "pgvector", "Celery", "Playwright", "Next.js"],
+    metric: "Fact guard: the LLM may reword, never invent",
+    image: "/images/projects/life200.png",
+    repo: "https://github.com/Ynot1996/life200",
+    story: {
+      background:
+        "Applying for jobs means rewriting the same CV dozens of times, re-typing the same answers into every form, and losing track of where each application stands.",
+      challenge:
+        "Automate the repetitive parts without letting an LLM invent experience or submit on your behalf — and without breaching job sites' terms by creating accounts or scraping LinkedIn.",
+      approach:
+        "Life200 keeps one master profile and lets the LLM only select, reorder and reword facts from it; every tailored CV passes a deterministic fact guard before you see it. The plan runs in demoable phases: CV ingestion with structured LLM output, job discovery across Adzuna, Reed, Greenhouse, Lever and Ashby with a UK visa-sponsor filter, embedding-based matching and tailoring, a Next.js review workspace, Playwright pre-filling that stops before submit, and application tracking.",
+      outcome:
+        "Phase 0 is complete: repository, tooling, CI on every push, a health API, the master-profile schema and the fact guard — on a strict-typed Python stack (uv, ruff, mypy, pytest). Next: uploading past CVs into the master profile.",
+    },
+    architecture: {
+      summary:
+        "Planned architecture: a FastAPI service and Celery workers around one Postgres + pgvector store, with a Next.js workspace for review.",
+      layers: [
+        { title: "Client", nodes: [{ label: "Next.js Review Workspace", sub: "side-by-side CV diff · approve" }] },
+        { title: "API", nodes: [{ label: "FastAPI", sub: "Pydantic v2 · typed routes" }] },
+        {
+          title: "Services",
+          nodes: [
+            { label: "Fact Guard", sub: "deterministic check" },
+            { label: "Match + Tailor", sub: "LLM · embeddings" },
+            { label: "Job Discovery", sub: "board connectors" },
+          ],
+        },
+        {
+          title: "Workers",
+          nodes: [
+            { label: "Celery + Redis", sub: "scheduled search · LLM calls" },
+            { label: "Playwright", sub: "pre-fill, stop before submit" },
+          ],
+        },
+        { title: "Data", nodes: [{ label: "PostgreSQL 16", sub: "+ pgvector" }] },
+      ],
+    },
+  },
 
   /* -------------------------- Full-stack & Side ------------------------ */
+  {
+    slug: "votive",
+    title: "Votive",
+    categories: ["Full-stack & Side"],
+    period: "Oct 2026 – now",
+    dateValue: 202610,
+    role: "Solo build · in progress",
+    oneLiner:
+      "Walk into a church in your browser and light a candle — five 3D churches with real capacity, a live queue at the door, and candles that burn down in real time.",
+    tags: ["TypeScript", "React", "Three.js", "WebSocket", "SQLite", "Stripe"],
+    metric: "5 churches · live queue · real-time candles",
+    image: "/images/projects/votive.png",
+    repoNote: "Private repository",
+    story: {
+      background:
+        "A quiet ritual, rebuilt for the browser: choose one of five churches — from Notre-Dame de Paris at real scale to a Romanesque village chapel and a modern concrete chapel — walk in, and light a candle.",
+      challenge:
+        "Make a shared space feel real online. Every church has a limited number of places, visitors queue at the door when it's full, and candles burn down in real time and can't be relit — while keeping sign-in and payments trustworthy.",
+      approach:
+        "A Node/TypeScript server holds each church's capacity and a first-come-first-served queue over WebSockets: walking out through the door hands your place to the next person, and an unused admission lapses after 90 seconds. Each church is its own Three.js world — building, collision, lighting, light shafts and sound — behind a shared interface, and all audio is synthesised with the Web Audio API. Sign-in verifies Google and Apple ID tokens with hashed sessions in an HttpOnly cookie; Stripe Checkout prices come from the server, and fulfilment is idempotent with a webhook as backup.",
+      outcome:
+        "A working desktop build with free tealights and paid votive and pillar candles. Next: mobile touch controls and iOS/Android apps.",
+    },
+    architecture: {
+      summary:
+        "A Three.js client talks to one Node server over WebSockets and REST; the server owns capacity, queues, sessions and payments.",
+      layers: [
+        {
+          title: "Client",
+          nodes: [
+            { label: "React + Three.js", sub: "5 churches · first-person" },
+            { label: "Web Audio", sub: "synthesised sound" },
+          ],
+        },
+        { title: "Transport", nodes: [{ label: "WebSocket", sub: "rooms · queue" }, { label: "REST /api" }] },
+        {
+          title: "Server · Node",
+          nodes: [
+            { label: "Rooms & Queue", sub: "capacity · 90 s hold" },
+            { label: "Auth", sub: "Google / Apple ID tokens" },
+            { label: "Payments", sub: "Stripe · idempotent" },
+          ],
+        },
+        { title: "Data", nodes: [{ label: "SQLite", sub: "node:sqlite" }] },
+      ],
+    },
+  },
   {
     slug: "mypocket",
     title: "MyPocket",
     categories: ["Full-stack & Side"],
     period: "Mar – Sep 2025",
     dateValue: 202509,
-    role: "Capstone · 900-hour bootcamp",
+    role: "Solo build · 900-hour programme",
     oneLiner:
-      "A cross-platform personal-finance app with a .NET backend serving both web and mobile (MAUI).",
+      "A complete personal-finance system — transactions, budgets and savings goals — with one .NET API serving both web and mobile (MAUI).",
     tags: ["C#", ".NET MAUI", "ASP.NET Core", "Docker", "GCP"],
-    metric: "+30% data-entry efficiency",
+    metric: "Solo build · web + mobile from one API",
     image: "/images/projects/mypocket.png",
     imageFit: "fill",
     heroPosition: "center 22%",
@@ -353,7 +536,7 @@ const allProjects: Project[] = [
       challenge:
         "Serve web and mobile from a single backend, keep accounting data clean, and secure multi-tier access — all production-deployable.",
       approach:
-        "I architected a .NET (C#) backend exposing a RESTful API consumed by both a web client and a .NET MAUI mobile app. I built an accounting module with 11 expense and 5 income categories (improving data-entry efficiency by 30%) and RBAC with JWT for Standard, Subscription and Admin tiers.",
+        "Working single-handedly from the data model and UML design onwards, I built an ASP.NET Core REST API consumed by both a web client and a .NET MAUI mobile app, covering transactions, budgets and savings goals. Access is role-based across Standard, Subscription and Admin tiers with BCrypt-hashed credentials, plus an admin panel for user and subscription management.",
       outcome:
         "Containerised with Docker and deployed via GCP Cloud Run with Google Cloud SQL and GitHub Actions — a fully automated deployment lifecycle.",
     },
@@ -368,12 +551,13 @@ const allProjects: Project[] = [
             { label: "Mobile App", sub: ".NET MAUI" },
           ],
         },
-        { title: "API", nodes: [{ label: "ASP.NET Core", sub: "RESTful · JWT + RBAC" }] },
+        { title: "API", nodes: [{ label: "ASP.NET Core", sub: "RESTful · RBAC" }] },
         {
           title: "Services",
           nodes: [
-            { label: "Accounting", sub: "11 expense · 5 income" },
-            { label: "Auth / Tiers" },
+            { label: "Accounting", sub: "transactions · budgets · goals" },
+            { label: "Auth / Tiers", sub: "BCrypt" },
+            { label: "Admin Panel", sub: "users · subscriptions" },
           ],
         },
         { title: "Data", nodes: [{ label: "Google Cloud SQL" }] },
@@ -389,7 +573,7 @@ const allProjects: Project[] = [
     categories: ["Team & Course"],
     period: "Jan – Apr 2026",
     dateValue: 202604,
-    role: "Team of 5 · University of Birmingham",
+    role: "Led architecture · team of 5",
     oneLiner:
       "A Python CS-learning platform built by a 5-person Agile team, with a security-first design.",
     tags: ["Python", "Flask", "UML", "Agile", "Security"],
@@ -402,7 +586,7 @@ const allProjects: Project[] = [
       challenge:
         "Coordinate five people across two high-intensity sprints while keeping the architecture coherent and the platform secure.",
       approach:
-        "I led the system-architecture phase, producing three UML diagram types (Use Case, Class, Sequence) to map 5+ complex user interactions and backend workflows, and hardened the platform with salted password hashing and Flask session management to neutralise rainbow-table attacks.",
+        "I led the system-architecture phase, producing three UML diagram types (Use Case, Class, Sequence) to map 5+ complex user interactions and backend workflows, and hardened the platform with salted password hashing and Flask session management to neutralise rainbow-table attacks. I also ran the team's Git/GitHub and Trello workflow across both sprints.",
       outcome:
         "A working, security-conscious learning platform delivered on an Agile cadence.",
     },
@@ -521,7 +705,7 @@ export type MilestoneKind =
   | "award"
   | "milestone";
 
-export type Phase = "Finance & economics" | "Foundation" | "United Kingdom";
+export type Phase = "Finance & economics" | "Foundation" | "Birmingham" | "London";
 
 export interface Milestone {
   year: string;
@@ -534,8 +718,9 @@ export interface Milestone {
   slug?: string; // links to a project detail page when relevant
 }
 
-// Oldest → newest (rendered left → right). Two phases: the pre-transition
-// finance & economics career, then the pivot into software engineering.
+// Oldest → newest (rendered left → right). Four phases: the pre-transition
+// finance & economics career, the pivot into software, the MSc in
+// Birmingham, then the move to London.
 export const timeline: Milestone[] = [
   /* ------------------- Phase 1 — finance & economics ------------------- */
   {
@@ -552,19 +737,19 @@ export const timeline: Milestone[] = [
     year: "2020",
     period: "Dec 2020 – May 2021",
     title: "Citigold Acquisition Officer",
-    org: "Citi",
+    org: "Citibank · Wealth Management",
     description:
-      "Data-driven performance analysis to spot market insights and optimise investment strategies, contributing to 3–5% account growth per quarter.",
+      "Data-driven analysis of client portfolios to identify market opportunities and refine investment strategy, contributing 3–5% account growth per quarter.",
     kind: "work",
     phase: "Finance & economics",
   },
   {
     year: "2021",
     period: "Sep 2021 – May 2022",
-    title: "Audit Innovation Officer",
-    org: "Deloitte",
+    title: "Audit Innovation Staff",
+    org: "Deloitte · Skills Development Hub",
     description:
-      "Oversaw data migration for 50+ companies (EMS → Levvia) and optimised complex Excel workflows for 30+ clients, completing audit tasks 25% faster than peers.",
+      "Built VBA automation for a system migration across 50+ client entities, eliminating repeated manual reconciliation.",
     kind: "work",
     phase: "Finance & economics",
   },
@@ -572,9 +757,9 @@ export const timeline: Milestone[] = [
     year: "2022",
     period: "Sep 2022 – Feb 2023",
     title: "Assistant Relationship Manager",
-    org: "Bank of East Asia · Corporate Banking",
+    org: "Bank of East Asia · Corporate Lending",
     description:
-      "Managed datasets for 20+ listed companies (USD 120M portfolio), cutting processing time 20%, and fed financial data into Moody's risk models across 5 reports.",
+      "Rebuilt internal risk reporting for a USD 120M corporate lending portfolio into a visual workflow, cutting preparation time by around 20%.",
     kind: "work",
     phase: "Finance & economics",
   },
@@ -617,20 +802,10 @@ export const timeline: Milestone[] = [
     title: "MyPocket — Full-stack Capstone",
     org: "900-hour Program · Ministry of Labor",
     description:
-      "Capstone of an intensive 900-hour bootcamp: a cross-platform finance system (.NET + MAUI) with JWT/RBAC, shipped to GCP Cloud Run via Docker and GitHub Actions.",
+      "Capstone of an intensive 900-hour programme: a personal finance system built single-handedly, with one ASP.NET Core API serving web and .NET MAUI clients and RBAC across three tiers.",
     kind: "project",
     phase: "Foundation",
     slug: "mypocket",
-  },
-  {
-    year: "2025",
-    period: "Sep 2025 – Sep 2026",
-    title: "MSc Computer Science",
-    org: "University of Birmingham, UK",
-    description:
-      "Data Structures & Algorithms, OOP, Computer Systems, and AI & ML — converting strong fundamentals into formal CS.",
-    kind: "education",
-    phase: "United Kingdom",
   },
   {
     year: "2026",
@@ -640,7 +815,7 @@ export const timeline: Milestone[] = [
     description:
       "Random Forest on 913,320 HM Land Registry records; feature engineering took R² from negative to 0.46.",
     kind: "project",
-    phase: "United Kingdom",
+    phase: "Birmingham",
     slug: "house-price-predictor",
   },
   {
@@ -651,7 +826,7 @@ export const timeline: Milestone[] = [
     description:
       "Led the architecture for a 5-person Agile CS learning platform, with UML modelling and a security-first build.",
     kind: "project",
-    phase: "United Kingdom",
+    phase: "Birmingham",
     slug: "flashlearn",
   },
   {
@@ -662,19 +837,62 @@ export const timeline: Milestone[] = [
     description:
       "A decentralised ISA platform on Solana using smart contracts for trustless escrow and immutable repayment terms.",
     kind: "award",
-    phase: "United Kingdom",
+    phase: "Birmingham",
     slug: "eduinvest",
   },
   {
     year: "2026",
     period: "Jun 2026",
     title: "ReguLens",
-    org: "Personal project",
+    org: "UKFIN+ Hackathon",
     description:
-      "A consumer complaint early-warning platform for regulators like the FCA — NLP/LLM clustering and severity ranking via React + FastAPI.",
+      "A compliance early-warning platform for regulators like the FCA — an LLM-driven pipeline over 130,000+ complaints, surfaced via React + FastAPI.",
     kind: "project",
-    phase: "United Kingdom",
+    phase: "Birmingham",
     slug: "regulens",
+  },
+  {
+    year: "2026",
+    period: "Jun – Sep 2026",
+    title: "MSc Dissertation",
+    org: "Root-cause analysis in LLM code repair",
+    description:
+      "A controlled study of feedback strategies in multi-agent LLM code repair across 6,810 task-runs.",
+    kind: "project",
+    phase: "Birmingham",
+    slug: "multi-agent-code-repair",
+  },
+
+  /* ----------------------- Phase 4 — a new chapter ---------------------- */
+  {
+    year: "2026",
+    period: "Sep 2026",
+    title: "Moved to London",
+    org: "A new chapter",
+    description:
+      "Relocated to London after the MSc to start the next stage of my engineering career.",
+    kind: "milestone",
+    phase: "London",
+  },
+  {
+    year: "2026",
+    period: "Oct 2026 – now",
+    title: "Life200",
+    org: "In progress",
+    description: "A job-search co-pilot: one master profile, JD-tailored CVs that pass a fact guard, pre-filled applications.",
+    kind: "project",
+    phase: "London",
+    slug: "life200",
+  },
+  {
+    year: "2026",
+    period: "Oct 2026 – now",
+    title: "Votive",
+    org: "In progress",
+    description: "Light a candle in a 3D church in your browser — live capacity, queues and real-time candles.",
+    kind: "project",
+    phase: "London",
+    slug: "votive",
   },
 ];
 

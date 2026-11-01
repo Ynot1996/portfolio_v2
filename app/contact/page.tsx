@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { FiGithub, FiLinkedin, FiMail } from "react-icons/fi";
+import { FiDownload, FiGithub, FiLinkedin, FiMail } from "react-icons/fi";
 import { profile } from "../data";
 import Footer from "../components/Footer";
 
@@ -31,6 +31,14 @@ export default function ContactPage() {
               >
                 <FiMail className="h-4 w-4" aria-hidden />
                 {profile.email}
+              </a>
+              <a
+                href={profile.cv}
+                download
+                className="inline-flex items-center gap-2 rounded-xl border border-line bg-panel px-6 py-3 text-sm font-medium text-ink outline-none transition-colors hover:border-accent/40 focus-visible:ring-2 focus-visible:ring-accent"
+              >
+                <FiDownload className="h-4 w-4" aria-hidden />
+                Download CV
               </a>
               <div className="flex gap-2">
                 <a

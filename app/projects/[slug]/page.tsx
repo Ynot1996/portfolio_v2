@@ -145,7 +145,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                 </a>
               ) : (
                 <span className="rounded-xl border border-dashed border-line px-4 py-3 text-center text-xs text-muted">
-                  Repository link coming soon
+                  {project.repoNote ?? "Repository link coming soon"}
                 </span>
               )}
               {project.live && (
@@ -179,16 +179,56 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           </div>
         </div>
 
+        {/* how it works, then results */}
+        {[
+          { label: "How it works", figures: project.howItWorks },
+          { label: "Results", figures: project.results },
+        ].map(
+          ({ label, figures }) =>
+            figures && (
+              <div key={label} className="mt-16">
+                <div className="mb-6 flex items-center gap-3">
+                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
+                    {label}
+                  </span>
+                  <span className="h-px flex-1 bg-line" />
+                </div>
+                <div className="grid gap-8">
+                  {figures.map((fig) => (
+                    <figure key={fig.src} className="rounded-3xl border border-line bg-panel2/40 p-4 sm:p-6">
+                      {/* figures have white backgrounds, so frame them as light panels in both themes */}
+                      <div className="overflow-hidden rounded-2xl bg-white p-2 sm:p-4">
+                        <Image
+                          src={fig.src}
+                          alt={fig.alt}
+                          width={fig.width}
+                          height={fig.height}
+                          sizes="(max-width: 1200px) 100vw, 1100px"
+                          className="mx-auto h-auto w-full max-w-4xl"
+                        />
+                      </div>
+                      <figcaption className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-muted">
+                        {fig.caption}
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
+              </div>
+            )
+        )}
+
         {/* architecture */}
-        <div className="mt-16">
-          <div className="mb-6 flex items-center gap-3">
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
-              System architecture
-            </span>
-            <span className="h-px flex-1 bg-line" />
+        {project.architecture && (
+          <div className="mt-16">
+            <div className="mb-6 flex items-center gap-3">
+              <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
+                System architecture
+              </span>
+              <span className="h-px flex-1 bg-line" />
+            </div>
+            <ArchitectureDiagram architecture={project.architecture} />
           </div>
-          <ArchitectureDiagram architecture={project.architecture} />
-        </div>
+        )}
 
         {/* prev / next */}
         <nav className="mt-16 grid gap-4 border-t border-line pt-8 sm:grid-cols-2">

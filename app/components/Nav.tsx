@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiDownload, FiMenu, FiX } from "react-icons/fi";
 import ThemeToggle from "./ThemeToggle";
 import { profile } from "../data";
 
@@ -62,6 +62,13 @@ export default function Nav() {
               {l.label}
             </Link>
           ))}
+          <a
+            href={profile.cv}
+            download
+            className="ml-2 inline-flex items-center gap-1.5 rounded-lg border border-line px-3 py-2 text-sm font-medium text-ink outline-none transition-colors hover:border-accent/40 focus-visible:ring-2 focus-visible:ring-accent"
+          >
+            <FiDownload className="h-4 w-4" aria-hidden /> CV
+          </a>
           <Link
             href="/contact"
             className="ml-2 rounded-lg bg-ink px-4 py-2 text-sm font-medium text-bg outline-none transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-accent"
@@ -107,6 +114,14 @@ export default function Nav() {
                   {l.label}
                 </Link>
               ))}
+              <a
+                href={profile.cv}
+                download
+                onClick={() => setOpen(false)}
+                className="mt-1 inline-flex items-center justify-center gap-2 rounded-xl border border-line px-4 py-3 text-base font-medium text-ink"
+              >
+                <FiDownload className="h-4 w-4" aria-hidden /> Download CV
+              </a>
               <Link
                 href="/contact"
                 onClick={() => setOpen(false)}

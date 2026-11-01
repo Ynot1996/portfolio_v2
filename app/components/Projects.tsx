@@ -47,7 +47,7 @@ export default function Projects() {
             </h2>
           </div>
           <p className="max-w-md text-sm text-muted">
-            Every project opens into a full case study with the story and architecture behind it.
+            Every project opens into a full case study with the story, architecture and results behind it.
           </p>
         </header>
 
