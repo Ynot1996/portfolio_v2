@@ -1,19 +1,30 @@
-// Server-only: fetches live project reach metrics from the GitHub REST API.
+// Server-only: fetches live project metrics from the GitHub REST API.
 //
-// - Stars / forks come from the public repo endpoint (no auth needed).
-// - 14-day traffic (views + unique visitors) comes from the traffic endpoints,
-//   which require a token with push access to the repo. Set GITHUB_TOKEN
-//   (a classic PAT with the `repo` scope) as an env var to enable them.
+// Two audiences, one source:
+//   • Public  — getPublicMetrics()  → only PUBLIC repos, safe reach numbers.
+//                 Used by the homepage "Project reach" section.
+//   • Owner   — getOwnerMetrics()   → every tracked repo incl. PRIVATE ones,
+//                 with the full metric set + referrers. Used by /dashboard
+//                 (password-gated). Private repos are never returned publicly.
 //
-// Results are cached for an hour (ISR) so we never hammer the API or hit rate
-// limits, and every call degrades gracefully: a missing token or a failed repo
-// simply omits its traffic numbers rather than breaking the page.
+// - Stars / forks / watchers / issues come from the public repo endpoint.
+// - 14-day traffic (views, visitors, clones) and referrers need a token with
+//   push access — set GITHUB_TOKEN (classic PAT, `repo` scope).
+//
+// Cached for an hour (ISR). Every call degrades gracefully: a missing token or
+// a failed repo simply omits those numbers rather than breaking the page.
 
 import { projects } from "../data";
 
 const GITHUB_API = "https://api.github.com";
-const REVALIDATE_SECONDS = 3600; // refresh at most once an hour
+const REVALIDATE_SECONDS = 3600;
 const TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || "";
+
+export interface Referrer {
+  referrer: string;
+  count: number;
+  uniques: number;
+}
 
 export interface RepoMetric {
   slug: string;
@@ -22,11 +33,23 @@ export interface RepoMetric {
   name: string;
   repoUrl: string;
   live?: string;
+  isPrivate: boolean;
+  // engagement
   stars: number;
   forks: number;
-  /** 14-day totals from the traffic API; null when unavailable. */
+  watchers: number;
+  openIssues: number;
+  // 14-day traffic (null when unavailable)
   views: number | null;
   visitors: number | null;
+  clones: number | null;
+  cloneVisitors: number | null;
+  // activity / meta
+  language: string | null;
+  pushedAt: string | null;
+  sizeKb: number;
+  // owner-only
+  topReferrers: Referrer[];
 }
 
 export interface MetricsSummary {
@@ -35,13 +58,26 @@ export interface MetricsSummary {
     repos: number;
     stars: number;
     forks: number;
+    watchers: number;
     views: number;
     visitors: number;
+    clones: number;
   };
-  /** True when at least one repo returned traffic data (token present + access). */
   hasTraffic: boolean;
   tokenConfigured: boolean;
+  includesPrivate: boolean;
   generatedAt: string;
+}
+
+interface CoreRepo {
+  private: boolean;
+  stargazers_count: number;
+  forks_count: number;
+  subscribers_count: number;
+  open_issues_count: number;
+  language: string | null;
+  pushed_at: string | null;
+  size: number;
 }
 
 function parseRepo(url: string): { owner: string; name: string } | null {
@@ -72,26 +108,26 @@ async function ghJson<T>(path: string): Promise<T | null> {
   }
 }
 
-async function fetchRepoMetric(p: {
-  slug: string;
-  title: string;
-  repo: string;
-  live?: string;
-}): Promise<RepoMetric | null> {
+async function fetchRepoMetric(
+  p: { slug: string; title: string; repo: string; live?: string },
+  withReferrers: boolean
+): Promise<RepoMetric | null> {
   const parsed = parseRepo(p.repo);
   if (!parsed) return null;
   const { owner, name } = parsed;
 
-  const core = await ghJson<{ stargazers_count: number; forks_count: number }>(
-    `/repos/${owner}/${name}`
-  );
+  const core = await ghJson<CoreRepo>(`/repos/${owner}/${name}`);
 
-  // The traffic endpoint only resolves with a push-access token; skip otherwise.
-  const views = TOKEN
-    ? await ghJson<{ count: number; uniques: number }>(
-        `/repos/${owner}/${name}/traffic/views`
-      )
-    : null;
+  // Traffic + referrers only resolve with a push-access token.
+  const [views, clones, referrers] = TOKEN
+    ? await Promise.all([
+        ghJson<{ count: number; uniques: number }>(`/repos/${owner}/${name}/traffic/views`),
+        ghJson<{ count: number; uniques: number }>(`/repos/${owner}/${name}/traffic/clones`),
+        withReferrers
+          ? ghJson<Referrer[]>(`/repos/${owner}/${name}/traffic/popular/referrers`)
+          : Promise.resolve(null),
+      ])
+    : [null, null, null];
 
   return {
     slug: p.slug,
@@ -100,43 +136,46 @@ async function fetchRepoMetric(p: {
     name,
     repoUrl: `https://github.com/${owner}/${name}`,
     live: p.live,
+    isPrivate: core?.private ?? false,
     stars: core?.stargazers_count ?? 0,
     forks: core?.forks_count ?? 0,
+    watchers: core?.subscribers_count ?? 0,
+    openIssues: core?.open_issues_count ?? 0,
     views: views ? views.count : null,
     visitors: views ? views.uniques : null,
+    clones: clones ? clones.count : null,
+    cloneVisitors: clones ? clones.uniques : null,
+    language: core?.language ?? null,
+    pushedAt: core?.pushed_at ?? null,
+    sizeKb: core?.size ?? 0,
+    topReferrers: (referrers ?? []).slice(0, 4),
   };
 }
 
-export async function getProjectMetrics(): Promise<MetricsSummary> {
-  const tracked = projects.filter((p) => Boolean(p.repo));
+async function build(
+  tracked: { slug: string; title: string; repo: string; live?: string }[],
+  { includePrivate, withReferrers }: { includePrivate: boolean; withReferrers: boolean }
+): Promise<MetricsSummary> {
+  const results = await Promise.all(tracked.map((p) => fetchRepoMetric(p, withReferrers)));
 
-  const results = await Promise.all(
-    tracked.map((p) =>
-      fetchRepoMetric({
-        slug: p.slug,
-        title: p.title,
-        repo: p.repo as string,
-        live: p.live,
-      })
-    )
-  );
-
-  const perProject = results.filter((r): r is RepoMetric => r !== null);
+  let perProject = results.filter((r): r is RepoMetric => r !== null);
+  // Safety net: never surface a private repo in the public view, even if the
+  // caller's tracked list somehow included one.
+  if (!includePrivate) perProject = perProject.filter((r) => !r.isPrivate);
 
   const totals = perProject.reduce(
     (acc, r) => ({
       repos: acc.repos + 1,
       stars: acc.stars + r.stars,
       forks: acc.forks + r.forks,
+      watchers: acc.watchers + r.watchers,
       views: acc.views + (r.views ?? 0),
       visitors: acc.visitors + (r.visitors ?? 0),
+      clones: acc.clones + (r.clones ?? 0),
     }),
-    { repos: 0, stars: 0, forks: 0, views: 0, visitors: 0 }
+    { repos: 0, stars: 0, forks: 0, watchers: 0, views: 0, visitors: 0, clones: 0 }
   );
 
-  const hasTraffic = perProject.some((r) => r.views !== null);
-
-  // Sort the breakdown by reach: views first, then stars, then name.
   perProject.sort(
     (a, b) =>
       (b.views ?? 0) - (a.views ?? 0) ||
@@ -147,8 +186,30 @@ export async function getProjectMetrics(): Promise<MetricsSummary> {
   return {
     perProject,
     totals,
-    hasTraffic,
+    hasTraffic: perProject.some((r) => r.views !== null),
     tokenConfigured: Boolean(TOKEN),
+    includesPrivate: includePrivate,
     generatedAt: new Date().toISOString(),
   };
+}
+
+/** Public reach — only public repos. Safe to render to anyone. */
+export function getPublicMetrics(): Promise<MetricsSummary> {
+  const tracked = projects
+    .filter((p) => Boolean(p.repo))
+    .map((p) => ({ slug: p.slug, title: p.title, repo: p.repo as string, live: p.live }));
+  return build(tracked, { includePrivate: false, withReferrers: false });
+}
+
+/** Owner view — every tracked repo incl. private (via `metricsRepo`), full set. */
+export function getOwnerMetrics(): Promise<MetricsSummary> {
+  const tracked = projects
+    .filter((p) => Boolean(p.repo || p.metricsRepo))
+    .map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      repo: (p.repo || p.metricsRepo) as string,
+      live: p.live,
+    }));
+  return build(tracked, { includePrivate: true, withReferrers: true });
 }
