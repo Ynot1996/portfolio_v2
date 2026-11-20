@@ -5,6 +5,7 @@ yarn-error.log*
 .pnp.*
 .DS_Store
 .env*
+!.env.example
 .vscode/
 .idea/
 coverage/

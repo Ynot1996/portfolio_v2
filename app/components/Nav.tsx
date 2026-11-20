@@ -9,6 +9,7 @@ import { profile } from "../data";
 
 const links = [
   { label: "Projects", href: "/#work" },
+  { label: "Metrics", href: "/#metrics" },
   { label: "Journey", href: "/#journey" },
   { label: "Stack", href: "/#stack" },
 ];
