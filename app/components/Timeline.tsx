@@ -635,7 +635,7 @@ export default function Timeline() {
       <div className="mx-auto w-full max-w-content px-5 sm:px-8">
         <header className="max-w-2xl">
           <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
-            04 — Journey
+            03 — Journey
           </span>
           <h2 className="mt-3 font-serif text-3xl font-light tracking-tight sm:text-5xl">
             From economics to engineering
