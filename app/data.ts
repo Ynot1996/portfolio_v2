@@ -194,6 +194,9 @@ export interface Project {
   repo?: string;
   /** Shown instead of the repo button when the code isn't public. */
   repoNote?: string;
+  /** A repo to track in the private owner dashboard only (e.g. a private repo).
+   *  Never surfaced publicly — used solely for owner-only metrics. */
+  metricsRepo?: string;
   live?: string;
   story: {
     background: string;
@@ -475,39 +478,40 @@ const allProjects: Project[] = [
     dateValue: 202610,
     role: "Solo build · in progress",
     oneLiner:
-      "Walk into a church in your browser and light a candle — five 3D churches with real capacity, a live queue at the door, and candles that burn down in real time.",
-    tags: ["TypeScript", "React", "Three.js", "WebSocket", "SQLite", "Stripe"],
-    metric: "5 churches · live queue · real-time candles",
+      "Walk into a cathedral in your browser — one space built to the real scale of Notre-Dame de Paris, with a live queue at the door and candles that burn down in real time.",
+    tags: ["TypeScript", "React Three Fiber", "Three.js", "WebSocket", "SQLite"],
+    metric: "Notre-Dame scale · live queue · real-time candles",
     image: "/images/projects/votive.png",
     repoNote: "Private repository",
+    metricsRepo: "https://github.com/Ynot1996/votive",
     story: {
       background:
-        "A quiet ritual, rebuilt for the browser: choose one of five churches — from Notre-Dame de Paris at real scale to a Romanesque village chapel and a modern concrete chapel — walk in, and light a candle.",
+        "A quiet ritual, rebuilt for the browser: a single cathedral modelled to the real scale of Notre-Dame de Paris — 128 m long, 48 m wide, a 33 m vault and 69 m towers. Arrive on the square, step inside, and light a candle in one of the side chapels.",
       challenge:
-        "Make a shared space feel real online. Every church has a limited number of places, visitors queue at the door when it's full, and candles burn down in real time and can't be relit — while keeping sign-in and payments trustworthy.",
+        "Make a shared physical space feel real online: the cathedral holds a limited number of people, visitors queue on the square when it's full, and each candle burns down in real time and can never be relit.",
       approach:
-        "A Node/TypeScript server holds each church's capacity and a first-come-first-served queue over WebSockets: walking out through the door hands your place to the next person, and an unused admission lapses after 90 seconds. Each church is its own Three.js world — building, collision, lighting, light shafts and sound — behind a shared interface, and all audio is synthesised with the Web Audio API. Sign-in verifies Google and Apple ID tokens with hashed sessions in an HttpOnly cookie; Stripe Checkout prices come from the server, and fulfilment is idempotent with a webhook as backup.",
+        "A Node/TypeScript server owns the cathedral's capacity and a first-come-first-served queue over WebSockets — walk back out through the west portal and your place passes to the next person in line, and an admission you don't take up lapses after 90 seconds. The scene is React Three Fiber, with every dimension (nave, piers, chapels, candle stands) shared between client and server from one layout module. Candles and queue state persist in SQLite via the built-in node:sqlite, and the three candle types burn for real durations — a tealight 4 h, a votive 15 h, a pillar 72 h.",
       outcome:
-        "A working desktop build with free tealights and paid votive and pillar candles. Next: mobile touch controls and iOS/Android apps.",
+        "A working desktop build you can walk, queue for and light candles in. Not built yet: Stripe payments for candles, accounts, other visitors' live positions, and mobile touch controls.",
     },
     architecture: {
       summary:
-        "A Three.js client talks to one Node server over WebSockets and REST; the server owns capacity, queues, sessions and payments.",
+        "A React Three Fiber client talks to one Node/TS server over WebSockets; the server owns capacity, the queue and candle lifecycles, with geometry shared from a single layout module.",
       layers: [
         {
           title: "Client",
           nodes: [
-            { label: "React + Three.js", sub: "5 churches · first-person" },
-            { label: "Web Audio", sub: "synthesised sound" },
+            { label: "React Three Fiber", sub: "cathedral · first-person" },
+            { label: "HUD", sub: "occupancy · queue · light dialog" },
           ],
         },
-        { title: "Transport", nodes: [{ label: "WebSocket", sub: "rooms · queue" }, { label: "REST /api" }] },
+        { title: "Shared", nodes: [{ label: "layout.ts", sub: "dimensions · chapels · candles" }] },
+        { title: "Transport", nodes: [{ label: "WebSocket", sub: "/ws · queue" }] },
         {
-          title: "Server · Node",
+          title: "Server · Node/TS",
           nodes: [
-            { label: "Rooms & Queue", sub: "capacity · 90 s hold" },
-            { label: "Auth", sub: "Google / Apple ID tokens" },
-            { label: "Payments", sub: "Stripe · idempotent" },
+            { label: "Capacity & FIFO queue", sub: "90 s hold" },
+            { label: "Candle lifecycles", sub: "real-time burn" },
           ],
         },
         { title: "Data", nodes: [{ label: "SQLite", sub: "node:sqlite" }] },
@@ -607,39 +611,57 @@ const allProjects: Project[] = [
   },
   {
     slug: "focusedgroup",
-    title: "focusedgroup",
-    categories: ["AI & Data", "Team & Course"],
-    period: "Feb – May 2023",
-    dateValue: 202305,
-    role: "Team project · ITRI",
+    title: "Focused Group",
+    categories: ["AI & Data", "Full-stack & Side"],
+    period: "2023 – 2026",
+    dateValue: 202611,
+    role: "Solo rebuild · from an ITRI capstone",
     oneLiner:
-      "A financial platform with real-time stock data and LSTM-powered price forecasting, built as part of the ITRI AI & Big Data programme.",
-    tags: ["JavaScript", "Python", "LSTM", "FinTech"],
+      "A stock-forecasting web app that predicts next-session direction and an 80% price range for major US & UK indices — and trains a model on demand for any ticker you type in.",
+    tags: ["Python", "Flask", "scikit-learn", "Gradient Boosting", "FinTech"],
+    metric: "Walk-forward backtested, no cherry-picking",
     image: "/images/projects/focusedgroup.png",
     repo: "https://github.com/Ynot1996/focusedgroup",
     live: "https://focusedgroup.onrender.com",
     story: {
       background:
-        "As the capstone of the ITRI AI & Big Data programme, our team set out to build a real financial platform — not just a demo — with live market data and a machine-learning forecasting layer.",
+        "What began as my ITRI AI & Big Data capstone I rebuilt from the ground up into a production stock-forecasting app. Daily index direction is close to unpredictable, so the goal was a tool that is genuinely useful and honest — not one that inflates its accuracy.",
       challenge:
-        "Combining a reliable financial data feed, an LSTM time-series model, and a usable web interface into one cohesive team product on a short timeline.",
+        "Forecast next-session direction and a price range for live markets without fooling myself — no look-ahead leakage, no cherry-picked accuracy — while still making single-ticker inference fast enough to run live in the browser.",
       approach:
-        "We scraped market data with Python (Requests / BeautifulSoup) and trained an LSTM model for price forecasting. A JavaScript front-end surfaces the predictions alongside real-time stock information in a clean, shared interface built collaboratively via Git.",
+        "The served model is a gradient-boosted tree (scikit-learn HistGradientBoostingClassifier) for probability-of-up, plus two quantile regressors for the 80% price range, over 19 leakage-safe price/volume features. Everything is scored by an expanding-window walk-forward backtest against naive baselines (AUC, Brier, Sharpe, coverage). Heavy training runs offline via GitHub Actions and writes JSON artifacts the Flask app simply reads, so index forecasts are instant while any typed ticker is trained on demand in ~3–6s. The original LSTM is kept only as a reference benchmark — gradient-boosted trees were simpler, faster and no worse.",
       outcome:
-        "A shipped financial platform with working stock prediction — and my first experience integrating ML output into a deployed web product.",
+        "A bilingual (EN / 中文) four-tab dashboard — forecasts, performance charts, a model explainer and live market news — that openly reports ~54% accuracy alongside the full model comparison and calibration, retrains itself daily and deploys automatically.",
     },
     architecture: {
-      summary: "A Python ML pipeline feeds predictions into a JavaScript financial dashboard.",
+      summary:
+        "Offline training (GitHub Actions, daily) writes JSON artifacts; a Flask app reads them for instant index forecasts and trains any typed ticker on demand.",
       layers: [
-        { title: "Client", nodes: [{ label: "JS Financial Dashboard", sub: "real-time data + charts" }] },
+        { title: "Client", nodes: [{ label: "Dashboard", sub: "Jinja · ApexCharts · EN/中文" }] },
         {
-          title: "ML Pipeline",
+          title: "Web app (Flask)",
           nodes: [
-            { label: "Web Crawler", sub: "Requests + BeautifulSoup" },
-            { label: "LSTM Model", sub: "time-series forecast" },
+            { label: "Blueprints + i18n" },
+            { label: "POST /api/predict", sub: "live inference" },
           ],
         },
-        { title: "Data", nodes: [{ label: "Price Dataset" }, { label: "Prediction Output" }] },
+        {
+          title: "Prediction",
+          nodes: [
+            { label: "Artifact loader" },
+            { label: "On-demand trainer", sub: "any ticker · ~3–6s" },
+          ],
+        },
+        {
+          title: "Offline ML · daily",
+          nodes: [
+            { label: "Yahoo Finance OHLCV" },
+            { label: "19 leakage-safe features" },
+            { label: "GBDT + quantiles" },
+            { label: "Walk-forward backtest" },
+          ],
+        },
+        { title: "Data", nodes: [{ label: "JSON artifacts" }, { label: "SQLite news" }] },
       ],
     },
   },
@@ -771,7 +793,7 @@ export const timeline: Milestone[] = [
     title: "AI & Big Data Course",
     org: "Industrial Technology Research Institute (ITRI)",
     description:
-      "A 350-hour program in IT fundamentals, front/back-end and applied AI. Capstone: a financial platform with LSTM stock forecasting (focusedgroup) deployed as a team.",
+      "A 350-hour program in IT fundamentals, front/back-end and applied AI. Capstone: a stock-forecasting web app (focusedgroup) — later rebuilt solo into a gradient-boosted, walk-forward-backtested product.",
     kind: "education",
     phase: "Foundation",
     slug: "focusedgroup",

@@ -70,6 +70,21 @@ All content lives in [`app/data.ts`](app/data.ts) — update `profile`, `techGro
 there. Pages and the project routes are generated from this file, so no component
 changes are needed to add or edit a project.
 
+## Live project metrics
+
+The homepage **Project reach** section pulls live numbers from the GitHub REST
+API ([`app/lib/metrics.ts`](app/lib/metrics.ts)), server-side and cached for an
+hour (ISR):
+
+- **Stars / forks** — public, no auth required.
+- **14-day traffic (views + unique visitors)** — needs a token with push access.
+  Set `GITHUB_TOKEN` (a classic PAT with the `repo` scope) in `.env.local`
+  locally, or as a Vercel env var in production. See [`.env.example`](.env.example).
+
+Without a token the section still renders (stars/forks are live) and shows a hint.
+Repos are read from each project's `repo` field in `app/data.ts`, so the metrics
+track whatever projects you list — no extra wiring.
+
 ## Deploy to Vercel
 
 This is a standard Next.js app and deploys to Vercel with **zero configuration**.
@@ -78,7 +93,8 @@ This is a standard Next.js app and deploys to Vercel with **zero configuration**
 2. Go to [vercel.com/new](https://vercel.com/new) and **Import** the
    `Ynot1996/portfolio_v2` repository.
 3. Vercel auto-detects **Next.js** — keep the defaults (Build: `next build`,
-   Output: `.next`). No environment variables are required.
+   Output: `.next`). Optionally add `GITHUB_TOKEN` to light up traffic metrics
+   (see above); the app builds and runs fine without it.
 4. Click **Deploy**. Every push to the production branch redeploys automatically,
    and each pull request gets its own preview URL.
 
