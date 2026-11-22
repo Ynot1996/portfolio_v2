@@ -478,40 +478,40 @@ const allProjects: Project[] = [
     dateValue: 202610,
     role: "Solo build · in progress",
     oneLiner:
-      "Walk into a church in your browser and light a candle — five 3D churches with real capacity, a live queue at the door, and candles that burn down in real time.",
-    tags: ["TypeScript", "React", "Three.js", "WebSocket", "SQLite", "Stripe"],
-    metric: "5 churches · live queue · real-time candles",
+      "Walk into a cathedral in your browser — one space built to the real scale of Notre-Dame de Paris, with a live queue at the door and candles that burn down in real time.",
+    tags: ["TypeScript", "React Three Fiber", "Three.js", "WebSocket", "SQLite"],
+    metric: "Notre-Dame scale · live queue · real-time candles",
     image: "/images/projects/votive.png",
     repoNote: "Private repository",
     metricsRepo: "https://github.com/Ynot1996/votive",
     story: {
       background:
-        "A quiet ritual, rebuilt for the browser: choose one of five churches — from Notre-Dame de Paris at real scale to a Romanesque village chapel and a modern concrete chapel — walk in, and light a candle.",
+        "A quiet ritual, rebuilt for the browser: a single cathedral modelled to the real scale of Notre-Dame de Paris — 128 m long, 48 m wide, a 33 m vault and 69 m towers. Arrive on the square, step inside, and light a candle in one of the side chapels.",
       challenge:
-        "Make a shared space feel real online. Every church has a limited number of places, visitors queue at the door when it's full, and candles burn down in real time and can't be relit — while keeping sign-in and payments trustworthy.",
+        "Make a shared physical space feel real online: the cathedral holds a limited number of people, visitors queue on the square when it's full, and each candle burns down in real time and can never be relit.",
       approach:
-        "A Node/TypeScript server holds each church's capacity and a first-come-first-served queue over WebSockets: walking out through the door hands your place to the next person, and an unused admission lapses after 90 seconds. Each church is its own Three.js world — building, collision, lighting, light shafts and sound — behind a shared interface, and all audio is synthesised with the Web Audio API. Sign-in verifies Google and Apple ID tokens with hashed sessions in an HttpOnly cookie; Stripe Checkout prices come from the server, and fulfilment is idempotent with a webhook as backup.",
+        "A Node/TypeScript server owns the cathedral's capacity and a first-come-first-served queue over WebSockets — walk back out through the west portal and your place passes to the next person in line, and an admission you don't take up lapses after 90 seconds. The scene is React Three Fiber, with every dimension (nave, piers, chapels, candle stands) shared between client and server from one layout module. Candles and queue state persist in SQLite via the built-in node:sqlite, and the three candle types burn for real durations — a tealight 4 h, a votive 15 h, a pillar 72 h.",
       outcome:
-        "A working desktop build with free tealights and paid votive and pillar candles. Next: mobile touch controls and iOS/Android apps.",
+        "A working desktop build you can walk, queue for and light candles in. Not built yet: Stripe payments for candles, accounts, other visitors' live positions, and mobile touch controls.",
     },
     architecture: {
       summary:
-        "A Three.js client talks to one Node server over WebSockets and REST; the server owns capacity, queues, sessions and payments.",
+        "A React Three Fiber client talks to one Node/TS server over WebSockets; the server owns capacity, the queue and candle lifecycles, with geometry shared from a single layout module.",
       layers: [
         {
           title: "Client",
           nodes: [
-            { label: "React + Three.js", sub: "5 churches · first-person" },
-            { label: "Web Audio", sub: "synthesised sound" },
+            { label: "React Three Fiber", sub: "cathedral · first-person" },
+            { label: "HUD", sub: "occupancy · queue · light dialog" },
           ],
         },
-        { title: "Transport", nodes: [{ label: "WebSocket", sub: "rooms · queue" }, { label: "REST /api" }] },
+        { title: "Shared", nodes: [{ label: "layout.ts", sub: "dimensions · chapels · candles" }] },
+        { title: "Transport", nodes: [{ label: "WebSocket", sub: "/ws · queue" }] },
         {
-          title: "Server · Node",
+          title: "Server · Node/TS",
           nodes: [
-            { label: "Rooms & Queue", sub: "capacity · 90 s hold" },
-            { label: "Auth", sub: "Google / Apple ID tokens" },
-            { label: "Payments", sub: "Stripe · idempotent" },
+            { label: "Capacity & FIFO queue", sub: "90 s hold" },
+            { label: "Candle lifecycles", sub: "real-time burn" },
           ],
         },
         { title: "Data", nodes: [{ label: "SQLite", sub: "node:sqlite" }] },
